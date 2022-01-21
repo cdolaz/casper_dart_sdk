@@ -11,7 +11,8 @@ import 'package:jsonrpc2/jsonrpc2.dart';
 class JsonRpcHttpServerProxy extends ServerProxyBase {
   Map<String, String> additionalHeaders;
 
-  JsonRpcHttpServerProxy(url, [this.additionalHeaders = const <String, String>{}])
+  JsonRpcHttpServerProxy(url,
+      [this.additionalHeaders = const <String, String>{}])
       : super(url);
 
   /// Return a Future with the JSON-RPC response
@@ -42,7 +43,8 @@ class JsonRpcHttpServerProxy extends ServerProxyBase {
 /// See the documentation in [BatchServerProxyBase]
 class BatchJsonRpcHttpServerProxy extends BatchServerProxyBase {
   /// constructor
-  BatchJsonRpcHttpServerProxy(String url, [additionalHeaders = const <String, String>{}]) {
+  BatchJsonRpcHttpServerProxy(String url,
+      [additionalHeaders = const <String, String>{}]) {
     super.proxy = JsonRpcHttpServerProxy(url, additionalHeaders);
   }
 }

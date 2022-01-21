@@ -1,6 +1,6 @@
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:test/test.dart';
-import 'dart:io' show Platform; 
+import 'dart:io' show Platform;
 
 void main() {
   // Read properties from the environment
