@@ -1,4 +1,4 @@
-export 'src/casper_sdk.dart' show CasperSdk;
+export 'src/casper_client.dart' show CasperClient;
 
 // RPC call result types
 export 'src/jsonrpc/results/get_peers.dart' show GetPeersResult;

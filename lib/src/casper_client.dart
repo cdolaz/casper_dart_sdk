@@ -1,11 +1,10 @@
-import 'package:casper_dart_sdk/casper.dart';
+import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
-import 'package:casper_dart_sdk/src/jsonrpc/results/get_state_root_hash.dart';
 
-class CasperSdk {
+class CasperClient {
   final CasperNodeRpcClient _nodeClient;
 
-  CasperSdk(Uri nodeUri) : _nodeClient = CasperNodeRpcClient(nodeUri);
+  CasperClient(Uri nodeUri) : _nodeClient = CasperNodeRpcClient(nodeUri);
 
   Future<GetPeersResult> getPeers() async {
     return _nodeClient.getPeers();
