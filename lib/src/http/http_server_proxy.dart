@@ -41,11 +41,8 @@ class JsonRpcHttpServerProxy extends ServerProxyBase {
 
 /// See the documentation in [BatchServerProxyBase]
 class BatchJsonRpcHttpServerProxy extends BatchServerProxyBase {
-  @override
-  dynamic proxy;
-
   /// constructor
   BatchJsonRpcHttpServerProxy(String url, [additionalHeaders = const <String, String>{}]) {
-    proxy = JsonRpcHttpServerProxy(url, additionalHeaders);
+    super.proxy = JsonRpcHttpServerProxy(url, additionalHeaders);
   }
 }
