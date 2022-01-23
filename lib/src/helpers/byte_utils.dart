@@ -5,9 +5,8 @@ Iterable<int> bytesToNibbles(List<int> bytes) {
   return bytes.expand((element) => [(element >> 4) & 0x0F, element & 0x0F]);
 }
 
-// Return an infinite iterator that yields bits of the given bytes. 
+// Return an iterator that yields bits of the given bytes. 
 Iterable<int> bytesToBits(List<int> bytes) {
-  // Return an iterator that yields the bits of the given bytes.
   return bytes.expand((element) => [
     (element >> 7) & 0x01,
     (element >> 6) & 0x01,
@@ -19,3 +18,4 @@ Iterable<int> bytesToBits(List<int> bytes) {
     element & 0x01
   ]);
 }
+
