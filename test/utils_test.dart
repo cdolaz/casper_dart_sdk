@@ -46,4 +46,14 @@ void main() {
           0x1
         ]));
   });
+
+  test('Can check if hex string is same case', () {
+    expect(true, isHexStringSameCase('0123456789abcdef'));
+    expect(true, isHexStringSameCase('0123456789ABCDEF'));
+    expect(false, isHexStringSameCase('0123456789abcDeF'));
+    expect(true, isHexStringSameCase('abcdef'));
+    expect(true, isHexStringSameCase('ABCDEF'));
+    expect(false, isHexStringSameCase('abcDeF'));
+    expect(() => isHexStringSameCase('abcdefg'), throwsArgumentError);
+  });
 }
