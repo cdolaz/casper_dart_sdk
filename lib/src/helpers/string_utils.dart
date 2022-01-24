@@ -16,3 +16,7 @@ bool isHexStringSameCase(String hex) {
   }
   return m != 3;
 }
+
+int hexStringToInt(String hexString) {
+  return int.parse(hexString, radix: 16);
+}

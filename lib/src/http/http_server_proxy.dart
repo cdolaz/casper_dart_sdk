@@ -4,9 +4,6 @@ import 'dart:convert';
 
 import 'package:jsonrpc2/jsonrpc2.dart';
 
-///  Each argument in the call must be representable in json
-///  or have a toJson() method.
-///
 ///  Exceptions on the remote end will throw RpcException.
 class JsonRpcHttpServerProxy extends ServerProxyBase {
   Map<String, String> additionalHeaders;
