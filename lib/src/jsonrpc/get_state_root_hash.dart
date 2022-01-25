@@ -1,4 +1,4 @@
-import 'package:casper_dart_sdk/src/jsonrpc/results/rpc_result.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'get_state_root_hash.g.dart';

@@ -67,7 +67,7 @@ void main() {
     expect(false, isHexStringSameCase(result));
   });
 
-  test('Can replace regex', () {
+  test('Can shorten human readable duration', () {
     String input1 = '52secs';
     String input2 = '52sec';
 
@@ -78,6 +78,7 @@ void main() {
     expect(result1, equals('52s'));
     expect(result2, equals('52s'));
     expect(result3, equals('52secs'));
+    
     var r  = DurationJsonConverter.shorten('53secs', "sec", "s");
     expect(r, equals('53s'));
   });

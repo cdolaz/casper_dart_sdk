@@ -35,6 +35,15 @@ class JsonRpcHttpServerProxy extends ServerProxyBase {
       return body;
     }
   }
+
+  /// Returns a Future with raw string response from the RPC server
+  Future<String> callRaw(String method, [dynamic params]) async {
+    var package =
+        json.encode(JsonRpcMethod(method, params, serverVersion: "2.0"));
+
+    var resp = await transmit(package);
+    return resp;
+  }
 }
 
 /// See the documentation in [BatchServerProxyBase]
