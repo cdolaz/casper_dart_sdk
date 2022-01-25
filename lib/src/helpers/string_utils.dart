@@ -1,3 +1,5 @@
+import 'package:json_annotation/json_annotation.dart';
+
 /// Returns true if all chars in a string are uppercase or lowercase.
 /// Returns false if the string is mixed case or if there are no alphabetic chars.
 bool isHexStringSameCase(String hex) {
@@ -20,3 +22,22 @@ bool isHexStringSameCase(String hex) {
 int hexStringToInt(String hexString) {
   return int.parse(hexString, radix: 16);
 }
+
+String dateTimeToString(DateTime dateTime) {
+  return dateTime.toIso8601String();
+}
+
+class DateTimeJsonConverter implements JsonConverter<DateTime, String> {
+  const DateTimeJsonConverter();
+
+  @override
+  DateTime fromJson(String json) {
+    return DateTime.parse(json);
+  }
+
+  @override
+  String toJson(DateTime object) {
+    return object.toIso8601String();
+  }
+}
+

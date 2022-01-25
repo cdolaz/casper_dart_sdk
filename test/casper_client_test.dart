@@ -25,13 +25,4 @@ void main() {
     expect(rootHash.apiVersion, isNotEmpty);
   });
 
-  test('Can get deploy info', () async {
-    // final deployInfo = await sdk.getDeploy("695caf631c960002bc579f356a299d6cb60dee229cbd743ab29f98eaf3ec3cbd");
-    // print();
-    final String deployInfoResStr = await rpcClient.callRaw("info_get_deploy", {"deploy_hash":"695caf631c960002bc579f356a299d6cb60dee229cbd743ab29f98eaf3ec3cbd"});
-    // Print with indent
-    final deployInfoRes = json.decode(deployInfoResStr);
-    print(JsonEncoder.withIndent("    ").convert(deployInfoRes));
-    // expect(deployInfo, isNotNull);
-  });
 }

@@ -2,14 +2,21 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:cryptography/dart.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 
 enum Cep57ChecksumResult {
+  /// For backward compatibility: If the hex string is not small in size or
+  /// is not mixed case, no checksum is calculated.
   noChecksum,
+
+  /// The computed checksum is valid.
   valid,
+
+  /// The computed checksum does not match the checksum in the hex string.
   invalid,
 }
 
@@ -63,5 +70,25 @@ class Cep57Checksum {
     }
 
     return buffer.toString();
+  }
+}
+
+class Cep57ChecksummedHexJsonConverter extends JsonConverter<String, String> {
+  const Cep57ChecksummedHexJsonConverter();
+
+  @override
+  String fromJson(String json) {
+    final hexString = json;
+    final Tuple2<Cep57ChecksumResult, Uint8List> decoded =
+        Cep57Checksum.decode(hexString);
+    if (decoded.item1 == Cep57ChecksumResult.invalid) {
+      throw ArgumentError('Invalid CEP-57 checksum');
+    }
+    return json;
+  }
+
+  @override
+  String toJson(String object) {
+    return object;
   }
 }

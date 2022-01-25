@@ -1,9 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
+import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+import 'package:casper_dart_sdk/src/types/deploy.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
+import 'package:tuple/tuple.dart';
+import 'package:convert/convert.dart';
 
 void main() {
   test('Can convert byte array to nibbles', () {
@@ -55,5 +59,26 @@ void main() {
     expect(true, isHexStringSameCase('ABCDEF'));
     expect(false, isHexStringSameCase('abcDeF'));
     expect(() => isHexStringSameCase('abcdefg'), throwsArgumentError);
+  });
+
+  test('Can encode checksummed string', () {
+    final String result = Cep57Checksum.encode(
+        Uint8List.fromList(hex.decode("0123456789abcdef")));
+    expect(false, isHexStringSameCase(result));
+  });
+
+  test('Can replace regex', () {
+    String input1 = '52secs';
+    String input2 = '52sec';
+
+    String result1 = input1.replaceAll(RegExp(r'sec(s)?', caseSensitive: false), 's');
+    String result2 = input2.replaceAll(RegExp(r'sec(s)?', caseSensitive: false), 's');
+    String result3 = input1.replaceAll(RegExp(r'min(s)?', caseSensitive: false), 'm');
+
+    expect(result1, equals('52s'));
+    expect(result2, equals('52s'));
+    expect(result3, equals('52secs'));
+    var r  = DurationJsonConverter.shorten('53secs', "sec", "s");
+    expect(r, equals('53s'));
   });
 }
