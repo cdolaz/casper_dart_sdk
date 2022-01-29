@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:casper_dart_sdk/src/types/deploy.dart';
+import 'package:casper_dart_sdk/src/types/executable_deploy_item.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
+import 'package:convert/convert.dart';
 import 'package:test/test.dart';
 
 /// Tests for serialization and deserialization of [Deploy] objects
@@ -37,6 +40,29 @@ void testJsonConversions() {
     Duration duration = Duration(minutes: 90);
     String humanReadableDuration = DurationJsonConverter().toJson(duration);
     expect(humanReadableDuration, '1h 30m');
+  });
+
+  test('Can deserialize executable deploy item from json', () {
+    final jsonModuleBytes = {
+      "ModuleBytes": {
+        "args": [
+          [
+            "amount",
+            {"bytes": "0400e1f505", "parsed": "100000000", "cl_type": "U512"}
+          ]
+        ],
+        "module_bytes": ""
+      }
+    };
+    ModuleBytesDeployItem moduleBytesDeployItem =
+        ModuleBytesDeployItem.fromJson(jsonModuleBytes["ModuleBytes"]!);
+
+    expect(moduleBytesDeployItem.args.length, 1);
+    expect(moduleBytesDeployItem.args[0].name, 'amount');
+    String hexStr = hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
+    expect(hexStr, '0400e1f505');
+    expect(moduleBytesDeployItem.args[0].value.parsed, '100000000');
+    expect(moduleBytesDeployItem.args[0].value.clType, ClType.u512);
   });
 }
 

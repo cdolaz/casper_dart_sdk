@@ -1,20 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:casper_dart_sdk/src/types/signature.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'executable_deploy_item.dart';
+
 part 'deploy.g.dart';
-
-// @JsonSerializable()
-// abstract class ExecutableDeployItem {
-//   ExecutableDeployItem();
-
-//   factory ExecutableDeployItem.fromJson(Map<String, dynamic> json) =>
-//       _$ExecutableDeployItemFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$ExecutableDeployItemToJson(this);
-// }
 
 @JsonSerializable()
 class DeployApproval {
@@ -36,9 +30,28 @@ class DeployApproval {
 
 @JsonSerializable()
 class Deploy {
+  @JsonKey(name: 'hash')
+  @Cep57ChecksummedHexJsonConverter()
+  String hash;
+
+  @JsonKey(name: 'header')
+  DeployHeader header;
+
+  @JsonKey(name: 'payment')
+  @ExecutableDeployItemJsonConverter()
+  ExecutableDeployItem payment;
+
+  @JsonKey(name: 'session')
+  @ExecutableDeployItemJsonConverter()
+  ExecutableDeployItem session;
+
+  @JsonKey(name: 'approvals')
+  List<DeployApproval> approvals;
+
   factory Deploy.fromJson(Map<String, dynamic> json) => _$DeployFromJson(json);
   Map<String, dynamic> toJson() => _$DeployToJson(this);
-  Deploy();
+
+  Deploy(this.hash, this.header, this.payment, this.session, this.approvals);
 }
 
 @JsonSerializable()
@@ -66,6 +79,11 @@ class DeployHeader {
 
   @JsonKey(name: 'chain_name')
   String chainName;
+
+  factory DeployHeader.fromJson(Map<String, dynamic> json) =>
+      _$DeployHeaderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DeployHeaderToJson(this);
 
   DeployHeader(this.account, this.timestamp, this.ttl, this.gasPrice,
       this.bodyHash, this.dependencies, this.chainName);
