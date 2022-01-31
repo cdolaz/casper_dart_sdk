@@ -17,7 +17,7 @@ class ClValue {
   List<int> bytes;
 
   @JsonKey(name: 'parsed')
-  String? parsed;
+  dynamic parsed;
 
   Uint8List get bytesAsUint8List => Uint8List.fromList(bytes);
 

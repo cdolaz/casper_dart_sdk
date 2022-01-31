@@ -28,6 +28,24 @@ class ModuleBytesDeployItem extends ExecutableDeployItem {
   ModuleBytesDeployItem(List<NamedArg> args, this.moduleBytes) : super(args);
 }
 
+@JsonSerializable()
+class StoredContractByNameDeployItem extends ExecutableDeployItem {
+  @JsonKey(name: 'name')
+  String name;
+
+  @JsonKey(name: 'entry_point')
+  String entryPoint;
+
+  factory StoredContractByNameDeployItem.fromJson(Map<String, dynamic> json) =>
+      _$StoredContractByNameDeployItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoredContractByNameDeployItemToJson(this);
+
+  StoredContractByNameDeployItem(
+      this.name, this.entryPoint, List<NamedArg> args)
+      : super(args);
+}
+
 class NamedArgsJsonConverter
     extends JsonConverter<List<NamedArg>, List<dynamic>> {
   const NamedArgsJsonConverter();
@@ -68,6 +86,8 @@ class ExecutableDeployItemJsonConverter
     ExecutableDeployItem created;
     if (top == "ModuleBytes") {
       created = ModuleBytesDeployItem.fromJson(inner);
+    } else if (top == "StoredContractByName") {
+      created = StoredContractByNameDeployItem.fromJson(inner);
     } else {
       throw Exception("Unknown deploy item type: $top");
     }

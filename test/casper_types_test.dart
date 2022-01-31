@@ -42,7 +42,7 @@ void testJsonConversions() {
     expect(humanReadableDuration, '1h 30m');
   });
 
-  test('Can deserialize executable deploy item from json', () {
+  test('Can deserialize ModuleBytesDeployItem from json', () {
     final jsonModuleBytes = {
       "ModuleBytes": {
         "args": [
@@ -59,10 +59,37 @@ void testJsonConversions() {
 
     expect(moduleBytesDeployItem.args.length, 1);
     expect(moduleBytesDeployItem.args[0].name, 'amount');
-    String hexStr = hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
+    String hexStr =
+        hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
     expect(hexStr, '0400e1f505');
     expect(moduleBytesDeployItem.args[0].value.parsed, '100000000');
     expect(moduleBytesDeployItem.args[0].value.clType, ClType.u512);
+  });
+
+  test('Can deserialize StoredContractByNameDeployItem from json', () {
+    final jsonStoredContractByName = {
+      "StoredContractByName": {
+        "args": [
+          [
+            "quantity",
+            {"bytes": "e8030000", "cl_type": "I32", "parsed": 1000}
+          ]
+        ],
+        "entry_point": "example-entry-point",
+        "name": "casper-example"
+      }
+    };
+
+    StoredContractByNameDeployItem storedContractByNameDeployItem =
+        StoredContractByNameDeployItem.fromJson(
+            jsonStoredContractByName["StoredContractByName"]!);
+    
+    expect(storedContractByNameDeployItem.args.length, 1);
+    expect(storedContractByNameDeployItem.args[0].name, 'quantity');
+    expect(storedContractByNameDeployItem.args[0].value.parsed, 1000);
+    expect(storedContractByNameDeployItem.args[0].value.clType, ClType.i32);
+    expect(storedContractByNameDeployItem.entryPoint, 'example-entry-point');
+    expect(storedContractByNameDeployItem.name, 'casper-example');
   });
 }
 
