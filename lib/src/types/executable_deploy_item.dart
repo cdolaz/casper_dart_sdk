@@ -46,6 +46,72 @@ class StoredContractByNameDeployItem extends ExecutableDeployItem {
       : super(args);
 }
 
+@JsonSerializable()
+class StoredContractByHashDeployItem extends ExecutableDeployItem {
+  @JsonKey(name: 'hash')
+  @HexBytesWithCep57ChecksumConverter()
+  String hash;
+
+  @JsonKey(name: 'entry_point')
+  String entryPoint;
+
+  factory StoredContractByHashDeployItem.fromJson(Map<String, dynamic> json) =>
+      _$StoredContractByHashDeployItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoredContractByHashDeployItemToJson(this);
+
+  StoredContractByHashDeployItem(
+      this.hash, this.entryPoint, List<NamedArg> args)
+      : super(args);
+}
+
+@JsonSerializable()
+class StoredVersionedContractByHashDeployItem extends ExecutableDeployItem {
+  @JsonKey(name: 'hash')
+  @HexBytesWithCep57ChecksumConverter()
+  String hash;
+
+  @JsonKey(name: 'version')
+  int? version;
+
+  @JsonKey(name: 'entry_point')
+  String entryPoint;
+
+  factory StoredVersionedContractByHashDeployItem.fromJson(
+          Map<String, dynamic> json) =>
+      _$StoredVersionedContractByHashDeployItemFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$StoredVersionedContractByHashDeployItemToJson(this);
+
+  StoredVersionedContractByHashDeployItem(
+      this.hash, this.version, this.entryPoint, List<NamedArg> args)
+      : super(args);
+}
+
+@JsonSerializable()
+class StoredVersionedContractByNameDeployItem extends ExecutableDeployItem {
+  @JsonKey(name: 'name')
+  String name;
+
+  @JsonKey(name: 'version')
+  int? version;
+
+  @JsonKey(name: 'entry_point')
+  String entryPoint;
+
+  factory StoredVersionedContractByNameDeployItem.fromJson(
+          Map<String, dynamic> json) =>
+      _$StoredVersionedContractByNameDeployItemFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$StoredVersionedContractByNameDeployItemToJson(this);
+
+  StoredVersionedContractByNameDeployItem(
+      this.name, this.version, this.entryPoint, List<NamedArg> args)
+      : super(args);
+}
+
 class NamedArgsJsonConverter
     extends JsonConverter<List<NamedArg>, List<dynamic>> {
   const NamedArgsJsonConverter();
@@ -88,6 +154,12 @@ class ExecutableDeployItemJsonConverter
       created = ModuleBytesDeployItem.fromJson(inner);
     } else if (top == "StoredContractByName") {
       created = StoredContractByNameDeployItem.fromJson(inner);
+    } else if (top == "StoredContractByHash") {
+      created = StoredContractByHashDeployItem.fromJson(inner);
+    } else if (top == "StoredVersionedContractByName") {
+      created = StoredVersionedContractByNameDeployItem.fromJson(inner);
+    } else if (top == "StoredVersionedContractByHash") {
+      created = StoredVersionedContractByHashDeployItem.fromJson(inner);
     } else {
       throw Exception("Unknown deploy item type: $top");
     }
