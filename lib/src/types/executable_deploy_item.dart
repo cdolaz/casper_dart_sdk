@@ -112,6 +112,16 @@ class StoredVersionedContractByNameDeployItem extends ExecutableDeployItem {
       : super(args);
 }
 
+@JsonSerializable()
+class TransferDeployItem extends ExecutableDeployItem {
+  factory TransferDeployItem.fromJson(Map<String, dynamic> json) =>
+      _$TransferDeployItemFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$TransferDeployItemToJson(this);
+
+  TransferDeployItem(List<NamedArg> args) : super(args);
+}
+
 class NamedArgsJsonConverter
     extends JsonConverter<List<NamedArg>, List<dynamic>> {
   const NamedArgsJsonConverter();
@@ -160,6 +170,8 @@ class ExecutableDeployItemJsonConverter
       created = StoredVersionedContractByNameDeployItem.fromJson(inner);
     } else if (top == "StoredVersionedContractByHash") {
       created = StoredVersionedContractByHashDeployItem.fromJson(inner);
+    } else if (top == "Transfer") {
+      created = TransferDeployItem.fromJson(inner);
     } else {
       throw Exception("Unknown deploy item type: $top");
     }
@@ -169,6 +181,7 @@ class ExecutableDeployItemJsonConverter
 
   @override
   Map<String, dynamic> toJson(ExecutableDeployItem value) {
+    // TODO
     return {};
   }
 }

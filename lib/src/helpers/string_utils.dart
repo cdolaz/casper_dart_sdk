@@ -27,6 +27,10 @@ String dateTimeToString(DateTime dateTime) {
   return dateTime.toIso8601String();
 }
 
+String capitalizeFirstLetter(String string) {
+  return string[0].toUpperCase() + string.substring(1);
+}
+
 class DateTimeJsonConverter implements JsonConverter<DateTime, String> {
   const DateTimeJsonConverter();
 

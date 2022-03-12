@@ -9,8 +9,8 @@ part 'cl_value.g.dart';
 @JsonSerializable()
 class ClValue {
   @JsonKey(name: 'cl_type')
-  @ClTypeJsonConverter()
-  ClType clType;
+  @ClTypeDescriptorJsonConverter()
+  ClTypeDescriptor clTypeDescriptor;
 
   @JsonKey(name: 'bytes')
   @HexBytesWithCep57ChecksumConverter()
@@ -26,7 +26,7 @@ class ClValue {
 
   Map<String, dynamic> toJson() => _$ClValueToJson(this);
 
-  ClValue(this.clType, this.bytes);
+  ClValue(this.clTypeDescriptor, this.bytes);
 }
 
 class HexBytesWithCep57ChecksumConverter
