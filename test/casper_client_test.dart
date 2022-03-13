@@ -1,39 +1,58 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:test/test.dart';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, exit;
 
 void main() {
-  // Read properties from the environment
-  final String serverUrl = Platform.environment['CASPER_NODE_RPC_URL'] ?? 'http://185.246.84.43:7777/rpc';
-  final sdk = CasperClient(Uri.parse(serverUrl));
-  final rpcClient = JsonRpcHttpServerProxy(Uri.parse(serverUrl));
+  group("Casper Dart SDK", () {
+    // Read properties from the environment
+    final String? serverUrl = Platform.environment['CASPER_NODE_RPC_URL'];
 
-  test('Can get node peers', () async {
-    final peers = await sdk.getPeers();
-    expect(peers, isNotNull);
-    expect(peers.apiVersion, isNotEmpty);
-    expect(peers.peers, isNotEmpty);
-  });
+    test("can connect to test node", () {
+      final explanation = "CASPER_NODE_RPC_URL environment variable is not set.\n"
+          "Please set the environment variable CASPER_NODE_RPC_URL to the to "
+          "the URL of the Casper node that runs the RPC server you want to test against.";
+      expect(serverUrl, isNotNull, reason: explanation);
+    });
 
-  test('Can get state root hash', () async {
-    final rootHash = await sdk.getStateRootHash();
-    expect(rootHash, isNotNull);
-    expect(rootHash.stateRootHash.length, 64);
-    expect(rootHash.apiVersion, isNotEmpty);
-  });
+    if (serverUrl == null) {
+      return;
+    }
 
-  test('Can get deploy info', () async {
-    final params = GetDeployParams("695caf631c960002bc579f356a299d6cb60dee229cbd743ab29f98eaf3ec3cbd");
-    final result = await sdk.getDeploy(params);
-    expect(result, isNotNull);
-    expect(result.apiVersion, isNotEmpty);
-    expect(result.deploy, isNotNull);
-    expect(result.deploy.hash, "695caf631c960002bc579f356a299d6cb60dee229cbd743ab29f98eaf3ec3cbd");
-    expect(result.deploy.session, isNotNull);
-    expect(result.deploy.session.args[0].name, "amount");
+    final sdk = CasperClient(Uri.parse(serverUrl));
+    final rpcClient = JsonRpcHttpServerProxy(Uri.parse(serverUrl));
+
+    test("can get node peers", () async {
+      final result = await sdk.getPeers();
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.peers, isNotNull);
+      if (result.peers.isNotEmpty) {
+        expect(result.peers.first.address, isNotEmpty);
+        expect(result.peers.first.nodeId, isNotEmpty);
+      }
+    });
+
+    test("can get state root hash", () async {
+      final result = await sdk.getStateRootHash();
+      expect(result, isNotNull);
+      expect(result.stateRootHash.length, 64);
+      expect(result.apiVersion, isNotEmpty);
+    });
+
+    test("can get deploy info", () async {
+      final params = GetDeployParams("0acff04af6a2b92d5aa515045175800a7e7bc5ae9a1267fee2ad9c66184bcc14");
+      final result = await sdk.getDeploy(params);
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.deploy, isNotNull);
+      expect(result.deploy.hash, "0acff04af6a2b92d5aa515045175800a7e7bc5ae9a1267fee2ad9c66184bcc14");
+      expect(result.deploy.session, isNotNull);
+      expect(result.deploy.session.args[0].name, "amount");
+    });
   });
 }

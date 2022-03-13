@@ -1,5 +1,17 @@
 {
     "files.exclude": {
         "**/*.g.dart": true
+    },
+    "terminal.integrated.env.osx": {
+        "CASPER_NODE_RPC_URL": "http://138.201.54.44:7777/rpc"
+    },
+    "terminal.integrated.env.linux": {
+        "CASPER_NODE_RPC_URL": "http://138.201.54.44:7777/rpc"
+    },
+    "terminal.integrated.env.windows": {
+        "CASPER_NODE_RPC_URL": "http://138.201.54.44:7777/rpc"
+    },
+    "dart.env": {
+        "CASPER_NODE_RPC_URL": "http://138.201.54.44:7777/rpc"
     }
 }

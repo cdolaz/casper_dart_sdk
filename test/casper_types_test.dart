@@ -8,9 +8,9 @@ import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
 import 'package:convert/convert.dart';
 import 'package:test/test.dart';
 
-/// Tests for serialization and deserialization of [Deploy] objects
-void testDeployObjectSerDe() {
-  test('Can deserialize DeployApproval', () {
+/// Tests for [Deploy] object serialization-deserialization.
+void testDeployObjectSerde() {
+  test("can deserialize DeployApproval", () {
     final jsonDeployApproval = {
       "signer": "020268d0aee78aee5b0d18d5e518aade42d7d929306db38ad357eaa8c1edbbee702a",
       "signature":
@@ -27,65 +27,9 @@ void testDeployObjectSerDe() {
   });
 }
 
-/// Tests for Json object converters
-void testJsonConversions() {
-  test("Can convert human readable duration to Duration object", () {
-    String humanReadableDuration = '1hours 30m';
-    Duration duration = DurationJsonConverter().fromJson(humanReadableDuration);
-    expect(duration.inMinutes, 90);
-  });
-
-  test("Can convert Duration object to human readable duration", () {
-    Duration duration = Duration(minutes: 90);
-    String humanReadableDuration = DurationJsonConverter().toJson(duration);
-    expect(humanReadableDuration, '1h 30m');
-  });
-
-  test('Can deserialize option ClType object from json', () {
-    final jsonOptionU64 = {
-      "cl_type": {"Option": "U64"}
-    };
-
-    final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(jsonOptionU64['cl_type']);
-    expect(clTypeDescriptor.type, ClType.option);
-    expect((clTypeDescriptor as ClOptionTypeDescriptor).optionType.type, ClType.u64);
-  });
-
-  test('Can deserialize complex ClType object from json', () {
-    final json = {
-      "cl_type": {
-        "Option": {
-          "Map": {
-            "key": "U64",
-            "value": {
-              "Tuple2": [
-                "U512",
-                {
-                  "Result": {"ok": "U64", "err": "U512"}
-                }
-              ]
-            }
-          }
-        }
-      }
-    };
-
-    final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(json['cl_type']);
-    expect(clTypeDescriptor.type, ClType.option);
-    final option = clTypeDescriptor as ClOptionTypeDescriptor;
-    expect(option.optionType.type, ClType.map);
-    final map = option.optionType as ClMapTypeDescriptor;
-    expect(map.keyType.type, ClType.u64);
-    expect(map.valueType.type, ClType.tuple2);
-    final tuple2 = map.valueType as ClTuple2TypeDescriptor;
-    expect(tuple2.firstType.type, ClType.u512);
-    expect(tuple2.secondType.type, ClType.result);
-    final result = tuple2.secondType as ClResultTypeDescriptor;
-    expect(result.okType.type, ClType.u64);
-    expect(result.errType.type, ClType.u512);
-  });
-
-  test('Can deserialize ModuleBytesDeployItem from json', () {
+/// Tests for [ExecutableDeployItem] object serialization-deserialization.
+void testExecutableDeployItemSerde() {
+  test("can deserialize ModuleBytesDeployItem from json", () {
     final jsonModuleBytes = {
       "ModuleBytes": {
         "args": [
@@ -97,8 +41,7 @@ void testJsonConversions() {
         "module_bytes": ""
       }
     };
-    ModuleBytesDeployItem moduleBytesDeployItem =
-        ModuleBytesDeployItem.fromJson(jsonModuleBytes["ModuleBytes"]!);
+    ModuleBytesDeployItem moduleBytesDeployItem = ModuleBytesDeployItem.fromJson(jsonModuleBytes["ModuleBytes"]!);
 
     expect(moduleBytesDeployItem.args.length, 1);
     expect(moduleBytesDeployItem.args[0].name, 'amount');
@@ -108,7 +51,7 @@ void testJsonConversions() {
     expect(moduleBytesDeployItem.args[0].value.clTypeDescriptor.type, ClType.u512);
   });
 
-  test('Can deserialize StoredContractByNameDeployItem from json', () {
+  test("can deserialize StoredContractByNameDeployItem from json", () {
     final jsonStoredContractByName = {
       "StoredContractByName": {
         "args": [
@@ -133,7 +76,7 @@ void testJsonConversions() {
     expect(storedContractByNameDeployItem.name, 'casper-example');
   });
 
-  test("Can deserialize StoredContractByHashDeployItem from json", () {
+  test("can deserialize StoredContractByHashDeployItem from json", () {
     final jsonStoredContractByHash = {
       "StoredContractByHash": {
         "args": [
@@ -178,12 +121,11 @@ void testJsonConversions() {
     expect(storedContractByHashDeployItem.args[2].name, 'amount');
     expect(storedContractByHashDeployItem.args[2].value.parsed, '100000000000');
     expect(storedContractByHashDeployItem.args[2].value.clTypeDescriptor.type, ClType.u512);
-    expect(storedContractByHashDeployItem.hash,
-        '93d923e336b20a4c4ca14d592b60e5bd3fe330775618290104f9beb326db7ae2');
+    expect(storedContractByHashDeployItem.hash, '93d923e336b20a4c4ca14d592b60e5bd3fe330775618290104f9beb326db7ae2');
     expect(storedContractByHashDeployItem.entryPoint, 'delegate');
   });
 
-  test('Can deserialize TransferDeployItem from json', () {
+  test("can deserialize TransferDeployItem from json", () {
     final jsonTransferDeployItem = {
       "Transfer": {
         "args": [
@@ -219,28 +161,104 @@ void testJsonConversions() {
       }
     };
 
-    TransferDeployItem transferDeployItem =
-        TransferDeployItem.fromJson(jsonTransferDeployItem["Transfer"]!);
+    TransferDeployItem transferDeployItem = TransferDeployItem.fromJson(jsonTransferDeployItem["Transfer"]!);
 
     expect(transferDeployItem.args.length, 4);
     expect(transferDeployItem.args[0].name, 'amount');
     expect(transferDeployItem.args[0].value.parsed, '21927870400000');
     expect(transferDeployItem.args[0].value.clTypeDescriptor.type, ClType.u512);
     expect(transferDeployItem.args[1].name, 'target');
-    expect(transferDeployItem.args[1].value.parsed,
-        '866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55');
+    expect(transferDeployItem.args[1].value.parsed, '866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55');
     expect(transferDeployItem.args[1].value.clTypeDescriptor.type, ClType.byteArray);
     expect(transferDeployItem.args[2].name, 'id');
     expect(transferDeployItem.args[2].value.parsed, 1642804005768);
     expect(transferDeployItem.args[2].value.clTypeDescriptor.type, ClType.option);
     expect(transferDeployItem.args[3].name, 'targetAccountHex');
-    expect(transferDeployItem.args[3].value.parsed,
-        '01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d');
+    expect(
+        transferDeployItem.args[3].value.parsed, '01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d');
     expect(transferDeployItem.args[3].value.clTypeDescriptor.type, ClType.publicKey);
   });
 }
 
+/// Tests for [ClTypeDescriptor] object serialization-deserialization.
+void testClTypeSerde() {
+  test("can deserialize option ClType object from json", () {
+    final jsonOptionU64 = {
+      "cl_type": {"Option": "U64"}
+    };
+
+    final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(jsonOptionU64['cl_type']);
+    expect(clTypeDescriptor.type, ClType.option);
+    expect((clTypeDescriptor as ClOptionTypeDescriptor).optionType.type, ClType.u64);
+  });
+
+  test("can deserialize complex ClType object from json", () {
+    final json = {
+      "cl_type": {
+        "Option": {
+          "Map": {
+            "key": "U64",
+            "value": {
+              "Tuple2": [
+                "U512",
+                {
+                  "Result": {"ok": "U64", "err": "U512"}
+                }
+              ]
+            }
+          }
+        }
+      }
+    };
+
+    final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(json['cl_type']);
+    expect(clTypeDescriptor.type, ClType.option);
+    final option = clTypeDescriptor as ClOptionTypeDescriptor;
+    expect(option.optionType.type, ClType.map);
+    final map = option.optionType as ClMapTypeDescriptor;
+    expect(map.keyType.type, ClType.u64);
+    expect(map.valueType.type, ClType.tuple2);
+    final tuple2 = map.valueType as ClTuple2TypeDescriptor;
+    expect(tuple2.firstType.type, ClType.u512);
+    expect(tuple2.secondType.type, ClType.result);
+    final result = tuple2.secondType as ClResultTypeDescriptor;
+    expect(result.okType.type, ClType.u64);
+    expect(result.errType.type, ClType.u512);
+  });
+}
+
+/// Tests for Json object converters
+void testJsonConversions() {
+  group("Casper Dart SDK", () {
+    group("JSON converter", () {
+      group("Deploy", () {
+        testDeployObjectSerde();
+      });
+      group("ExecutableDeployItem", () {
+        testExecutableDeployItemSerde();
+      });
+
+      group("Duration", () {
+        test("can convert human readable duration to Duration object", () {
+          String humanReadableDuration = '1hours 30m';
+          Duration duration = DurationJsonConverter().fromJson(humanReadableDuration);
+          expect(duration.inMinutes, 90);
+        });
+
+        test("can convert Duration object to human readable duration", () {
+          Duration duration = Duration(minutes: 90);
+          String humanReadableDuration = DurationJsonConverter().toJson(duration);
+          expect(humanReadableDuration, '1h 30m');
+        });
+      });
+
+      group("ClType", () {
+        testClTypeSerde();
+      });
+    });
+  });
+}
+
 void main() {
-  testDeployObjectSerDe();
   testJsonConversions();
 }
