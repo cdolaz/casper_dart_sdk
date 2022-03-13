@@ -82,4 +82,10 @@ void main() {
     var r  = DurationJsonConverter.shorten('53secs', "sec", "s");
     expect(r, equals('53s'));
   });
+
+  test('Can capitalize first letter', () {
+    String input = 'abcdef';
+    String result = capitalizeFirstLetter(input);
+    expect(result, equals('Abcdef'));
+  });
 }

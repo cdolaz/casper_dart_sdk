@@ -65,6 +65,7 @@ class DeployHeader {
   DateTime timestamp;
 
   @JsonKey(name: 'ttl')
+  @DurationJsonConverter()
   Duration ttl;
 
   @JsonKey(name: 'gas_price')

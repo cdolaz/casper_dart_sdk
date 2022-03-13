@@ -12,8 +12,7 @@ import 'package:test/test.dart';
 void testDeployObjectSerDe() {
   test('Can deserialize DeployApproval', () {
     final jsonDeployApproval = {
-      "signer":
-          "020268d0aee78aee5b0d18d5e518aade42d7d929306db38ad357eaa8c1edbbee702a",
+      "signer": "020268d0aee78aee5b0d18d5e518aade42d7d929306db38ad357eaa8c1edbbee702a",
       "signature":
           "02165e788a00cb25cfe453fdba335a98c496f25120a9a47c2b6c9cb89f32550bb2431acea28112affb4f6ce840728769e278806948f61b5a11158dd07c733deed7"
     };
@@ -42,11 +41,48 @@ void testJsonConversions() {
     expect(humanReadableDuration, '1h 30m');
   });
 
-  test('Can deserialize complex ClType object from json', () {
-    final jsonOptionU64 = {"cl_type": {"Option": "U64"}};
+  test('Can deserialize option ClType object from json', () {
+    final jsonOptionU64 = {
+      "cl_type": {"Option": "U64"}
+    };
 
     final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(jsonOptionU64['cl_type']);
     expect(clTypeDescriptor.type, ClType.option);
+    expect((clTypeDescriptor as ClOptionTypeDescriptor).optionType.type, ClType.u64);
+  });
+
+  test('Can deserialize complex ClType object from json', () {
+    final json = {
+      "cl_type": {
+        "Option": {
+          "Map": {
+            "key": "U64",
+            "value": {
+              "Tuple2": [
+                "U512",
+                {
+                  "Result": {"ok": "U64", "err": "U512"}
+                }
+              ]
+            }
+          }
+        }
+      }
+    };
+
+    final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(json['cl_type']);
+    expect(clTypeDescriptor.type, ClType.option);
+    final option = clTypeDescriptor as ClOptionTypeDescriptor;
+    expect(option.optionType.type, ClType.map);
+    final map = option.optionType as ClMapTypeDescriptor;
+    expect(map.keyType.type, ClType.u64);
+    expect(map.valueType.type, ClType.tuple2);
+    final tuple2 = map.valueType as ClTuple2TypeDescriptor;
+    expect(tuple2.firstType.type, ClType.u512);
+    expect(tuple2.secondType.type, ClType.result);
+    final result = tuple2.secondType as ClResultTypeDescriptor;
+    expect(result.okType.type, ClType.u64);
+    expect(result.errType.type, ClType.u512);
   });
 
   test('Can deserialize ModuleBytesDeployItem from json', () {
@@ -66,8 +102,7 @@ void testJsonConversions() {
 
     expect(moduleBytesDeployItem.args.length, 1);
     expect(moduleBytesDeployItem.args[0].name, 'amount');
-    String hexStr =
-        hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
+    String hexStr = hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
     expect(hexStr, '0400e1f505');
     expect(moduleBytesDeployItem.args[0].value.parsed, '100000000');
     expect(moduleBytesDeployItem.args[0].value.clTypeDescriptor.type, ClType.u512);
@@ -88,8 +123,7 @@ void testJsonConversions() {
     };
 
     StoredContractByNameDeployItem storedContractByNameDeployItem =
-        StoredContractByNameDeployItem.fromJson(
-            jsonStoredContractByName["StoredContractByName"]!);
+        StoredContractByNameDeployItem.fromJson(jsonStoredContractByName["StoredContractByName"]!);
 
     expect(storedContractByNameDeployItem.args.length, 1);
     expect(storedContractByNameDeployItem.args[0].name, 'quantity');
@@ -106,53 +140,41 @@ void testJsonConversions() {
           [
             "delegator",
             {
-              "bytes":
-                  "01c106652cf627923c0f0370a7d96c8e572e41efefab03c6694598151cc21503f9",
-              "parsed":
-                  "01c106652cf627923c0f0370a7d96c8e572e41efefab03c6694598151cc21503f9",
+              "bytes": "01c106652cf627923c0f0370a7d96c8e572e41efefab03c6694598151cc21503f9",
+              "parsed": "01c106652cf627923c0f0370a7d96c8e572e41efefab03c6694598151cc21503f9",
               "cl_type": "PublicKey"
             }
           ],
           [
             "validator",
             {
-              "bytes":
-                  "017d96b9a63abcb61c870a4f55187a0a7ac24096bdb5fc585c12a686a4d892009e",
-              "parsed":
-                  "017d96b9a63abcb61c870a4f55187a0a7ac24096bdb5fc585c12a686a4d892009e",
+              "bytes": "017d96b9a63abcb61c870a4f55187a0a7ac24096bdb5fc585c12a686a4d892009e",
+              "parsed": "017d96b9a63abcb61c870a4f55187a0a7ac24096bdb5fc585c12a686a4d892009e",
               "cl_type": "PublicKey"
             }
           ],
           [
             "amount",
-            {
-              "bytes": "0500e8764817",
-              "parsed": "100000000000",
-              "cl_type": "U512"
-            }
+            {"bytes": "0500e8764817", "parsed": "100000000000", "cl_type": "U512"}
           ]
         ],
-        "hash":
-            "93d923e336b20a4c4ca14d592b60e5bd3fe330775618290104f9beb326db7ae2",
+        "hash": "93d923e336b20a4c4ca14d592b60e5bd3fe330775618290104f9beb326db7ae2",
         "entry_point": "delegate"
       }
     };
 
     StoredContractByHashDeployItem storedContractByHashDeployItem =
-        StoredContractByHashDeployItem.fromJson(
-            jsonStoredContractByHash["StoredContractByHash"]!);
+        StoredContractByHashDeployItem.fromJson(jsonStoredContractByHash["StoredContractByHash"]!);
 
     expect(storedContractByHashDeployItem.args.length, 3);
     expect(storedContractByHashDeployItem.args[0].name, 'delegator');
     expect(storedContractByHashDeployItem.args[0].value.parsed,
         '01c106652cf627923c0f0370a7d96c8e572e41efefab03c6694598151cc21503f9');
-    expect(
-        storedContractByHashDeployItem.args[0].value.clTypeDescriptor.type, ClType.publicKey);
+    expect(storedContractByHashDeployItem.args[0].value.clTypeDescriptor.type, ClType.publicKey);
     expect(storedContractByHashDeployItem.args[1].name, 'validator');
     expect(storedContractByHashDeployItem.args[1].value.parsed,
         '017d96b9a63abcb61c870a4f55187a0a7ac24096bdb5fc585c12a686a4d892009e');
-    expect(
-        storedContractByHashDeployItem.args[1].value.clTypeDescriptor.type, ClType.publicKey);
+    expect(storedContractByHashDeployItem.args[1].value.clTypeDescriptor.type, ClType.publicKey);
     expect(storedContractByHashDeployItem.args[2].name, 'amount');
     expect(storedContractByHashDeployItem.args[2].value.parsed, '100000000000');
     expect(storedContractByHashDeployItem.args[2].value.clTypeDescriptor.type, ClType.u512);
@@ -167,20 +189,14 @@ void testJsonConversions() {
         "args": [
           [
             "amount",
-            {
-              "cl_type": "U512",
-              "bytes": "060006ed7af113",
-              "parsed": "21927870400000"
-            }
+            {"cl_type": "U512", "bytes": "060006ed7af113", "parsed": "21927870400000"}
           ],
           [
             "target",
             {
               "cl_type": {"ByteArray": 32},
-              "bytes":
-                  "866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55",
-              "parsed":
-                  "866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55"
+              "bytes": "866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55",
+              "parsed": "866fdbaa7875bc41ba7fbe00a04623e78c127f24e85799c64935dd2ef577db55"
             }
           ],
           [
@@ -195,10 +211,8 @@ void testJsonConversions() {
             "targetAccountHex",
             {
               "cl_type": "PublicKey",
-              "bytes":
-                  "01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d",
-              "parsed":
-                  "01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d"
+              "bytes": "01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d",
+              "parsed": "01d6aceccfa3063684901d800b82e16682aaa163b9559985231591d04e43c0e14d"
             }
           ]
         ]
