@@ -8,7 +8,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'executable_deploy_item.dart';
 
-part 'deploy.g.dart';
+part 'generated/deploy.g.dart';
 
 @JsonSerializable()
 class DeployApproval {

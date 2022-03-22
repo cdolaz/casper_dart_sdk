@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'named_arg.dart';
 
-part 'executable_deploy_item.g.dart';
+part 'generated/executable_deploy_item.g.dart';
 
 abstract class ExecutableDeployItem {
   @JsonKey(name: 'args')

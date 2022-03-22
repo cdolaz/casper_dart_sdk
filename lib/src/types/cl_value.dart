@@ -4,7 +4,7 @@ import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'cl_value.g.dart';
+part 'generated/cl_value.g.dart';
 
 @JsonSerializable()
 class ClValue {

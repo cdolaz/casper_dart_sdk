@@ -2,7 +2,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
 import 'package:casper_dart_sdk/src/types/peer.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'get_peers.g.dart';
+part 'generated/get_peers.g.dart';
 
 @JsonSerializable()
 class GetPeersResult extends RpcResult {

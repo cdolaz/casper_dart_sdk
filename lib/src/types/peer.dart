@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'peer.g.dart';
+part 'generated/peer.g.dart';
 
 @JsonSerializable()
 class Peer {

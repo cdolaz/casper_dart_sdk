@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'rpc_params.g.dart';
+part 'generated/rpc_params.g.dart';
 
 @JsonSerializable()
 class RpcParams {

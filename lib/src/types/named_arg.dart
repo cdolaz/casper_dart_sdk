@@ -1,7 +1,7 @@
 import 'package:casper_dart_sdk/src/types/cl_value.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'named_arg.g.dart';
+part 'generated/named_arg.g.dart';
 
 @JsonSerializable()
 class NamedArg {

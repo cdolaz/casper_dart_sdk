@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/rpc_params.dart';
 
-part 'get_deploy.g.dart';
+part 'generated/get_deploy.g.dart';
 
 @JsonSerializable()
 class GetDeployParams extends RpcParams {
