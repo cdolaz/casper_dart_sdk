@@ -11,9 +11,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
     return GetPeersResult.fromJson(await call(RpcMethodName.infoGetPeers));
   }
 
-  Future<GetStateRootHashResult> getStateRootHash() async {
+  Future<GetStateRootHashResult> getStateRootHash([GetStateRootHashParams? params]) async {
     return GetStateRootHashResult.fromJson(
-        await call(RpcMethodName.chainGetStateRootHash));
+        await call(RpcMethodName.chainGetStateRootHash, params));
   }
 
   Future<GetDeployResult> getDeploy(GetDeployParams params) async {

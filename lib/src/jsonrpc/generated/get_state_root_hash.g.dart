@@ -6,6 +6,18 @@ part of '../get_state_root_hash.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+GetStateRootHashParams _$GetStateRootHashParamsFromJson(
+        Map<String, dynamic> json) =>
+    GetStateRootHashParams(
+      json['block_identifier'] as String,
+    );
+
+Map<String, dynamic> _$GetStateRootHashParamsToJson(
+        GetStateRootHashParams instance) =>
+    <String, dynamic>{
+      'block_identifier': instance.blockIdentifier,
+    };
+
 GetStateRootHashResult _$GetStateRootHashResultFromJson(
         Map<String, dynamic> json) =>
     GetStateRootHashResult(

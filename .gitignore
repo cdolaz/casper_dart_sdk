@@ -22,3 +22,6 @@ build/
 
 # Environment variables
 .env
+
+# Other files
+.DS_Store

@@ -25,8 +25,12 @@ import 'package:casper_dart_sdk/casper_sdk.dart';
 ```
 
 Use the `CasperClient` class to interact with the Casper Blockchain.
+
+For example:
 ```dart
-final client = CasperClient(Uri.parse("http://138.201.54.44:7777/rpc")); // Pass the node's RPC endpoint
+// Pass the node's RPC endpoint
+final client = CasperClient(Uri.parse("http://127.0.0.1:7777/rpc"));
+
 client.getPeers().then((result) {
   for (final peer in result.peers) {
     print(peer.address);
