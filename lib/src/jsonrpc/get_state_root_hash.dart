@@ -15,13 +15,15 @@ class GetStateRootHashParams extends RpcParams {
   @override
   Map<String, dynamic> toJson() => _$GetStateRootHashParamsToJson(this);
 
-  GetStateRootHashParams(String blockHash)
+  GetStateRootHashParams.fromBlockHash(String blockHash)
       : blockIdentifier = {"Hash": blockHash},
         super();
 
-  GetStateRootHashParams.height(int blockHeight)
+  GetStateRootHashParams.fromBlockHeight(int blockHeight)
       : blockIdentifier = {"Height": blockHeight},
         super();
+  
+  GetStateRootHashParams(this.blockIdentifier) : super();
 }
 
 @JsonSerializable()

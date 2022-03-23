@@ -9,7 +9,7 @@ part of '../get_state_root_hash.dart';
 GetStateRootHashParams _$GetStateRootHashParamsFromJson(
         Map<String, dynamic> json) =>
     GetStateRootHashParams(
-      json['block_identifier'] as String,
+      json['block_identifier'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$GetStateRootHashParamsToJson(

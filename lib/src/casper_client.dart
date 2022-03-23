@@ -26,9 +26,9 @@ class CasperClient {
   /// [blockHash] and [blockHeight] cannot be provided at the same time.
   Future<GetStateRootHashResult> getStateRootHash({String? blockHash, int? blockHeight}) async {
     if (blockHash != null) {
-      return _nodeClient.getStateRootHash(GetStateRootHashParams(blockHash));
+      return _nodeClient.getStateRootHash(GetStateRootHashParams.fromBlockHash(blockHash));
     } else if (blockHeight != null) {
-      return _nodeClient.getStateRootHash(GetStateRootHashParams.height(blockHeight));
+      return _nodeClient.getStateRootHash(GetStateRootHashParams.fromBlockHeight(blockHeight));
     } else if (blockHash == null && blockHeight == null) {
       return _nodeClient.getStateRootHash();
     } else {
