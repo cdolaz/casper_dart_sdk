@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:rpc_exceptions/rpc_exceptions.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
@@ -67,6 +67,13 @@ void main() {
       expect(result.deploy.hash, "0acff04af6a2b92d5aa515045175800a7e7bc5ae9a1267fee2ad9c66184bcc14");
       expect(result.deploy.session, isNotNull);
       expect(result.deploy.session.args[0].name, "amount");
+    });
+
+    test("should throw an error when getting deploy info with an invalid hash", () async {
+      expect(
+        () async => await sdk.getDeploy("<invalid hash>"),
+        throwsA(isA<RpcException>()),
+      );
     });
   });
 }
