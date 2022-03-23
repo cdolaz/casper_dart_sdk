@@ -19,18 +19,26 @@ class CasperClient {
     return _nodeClient.getPeers();
   }
 
+  /// Requests the state root hash of the node.
+  /// If [blockHash] or [blockHeight] is not provided, root hash of the global state is returned.
+  /// If [blockHash] is provided, the state root hash of the block with the given hash is returned.
+  /// If [blockHeight] is provided, the state root hash of the block at the given height is returned.
+  /// [blockHash] and [blockHeight] cannot be provided at the same time.
   Future<GetStateRootHashResult> getStateRootHash({String? blockHash, int? blockHeight}) async {
-      if (blockHash != null) {
-        return _nodeClient.getStateRootHash(GetStateRootHashParams(blockHash));
-      } else if (blockHeight != null) {
-        return _nodeClient.getStateRootHash(GetStateRootHashParams.height(blockHeight));
-      } else  if (blockHash == null && blockHeight == null) {
-        return _nodeClient.getStateRootHash();
-      } else { // blockHash == null && blockHeight != null
-        throw ArgumentError("If a parameter is specified, either blockHash or blockHeight must be specified, but not both.");
-      }
+    if (blockHash != null) {
+      return _nodeClient.getStateRootHash(GetStateRootHashParams(blockHash));
+    } else if (blockHeight != null) {
+      return _nodeClient.getStateRootHash(GetStateRootHashParams.height(blockHeight));
+    } else if (blockHash == null && blockHeight == null) {
+      return _nodeClient.getStateRootHash();
+    } else {
+      // blockHash == null && blockHeight != null
+      throw ArgumentError(
+          "If a parameter is specified, either blockHash or blockHeight must be specified, but not both.");
+    }
   }
 
+  /// Requests the deploy object with given [deployHash] from the network.
   Future<GetDeployResult> getDeploy(String deployHash) async {
     return _nodeClient.getDeploy(GetDeployParams(deployHash));
   }
