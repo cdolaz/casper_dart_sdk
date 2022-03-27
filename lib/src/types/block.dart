@@ -27,6 +27,57 @@ class Block {
   Block(this.hash, this.header /*, this.body, this.proofs*/);
 }
 
+@JsonSerializable(ignoreUnannotated: true, createFactory: false, createToJson: false)
+class BlockId {
+  dynamic _id; // String (hash) or int (height)
+
+  factory BlockId.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey("Hash")) {
+      return BlockId.fromHash(json['Hash']);
+    } else {
+      // Height
+      return BlockId.fromHeight(json['Height']);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    if (_id is String) {
+      return {"Hash": _id};
+    } else {
+      // Height
+      return {"Height": _id};
+    }
+  }
+
+  String? get hash => _id is String ? _id : null;
+  int? get height => _id is int ? _id : null;
+
+  @override
+  bool operator ==(other) {
+    if (other is BlockId) {
+      if (_id is String) {
+        return other._id == _id;
+      } else {
+        // Height
+        return other._id == _id;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
+
+  BlockId.fromHash(String hash) {
+    _id = hash;
+  }
+
+  BlockId.fromHeight(int height) {
+    _id = height;
+  }
+}
+
 @JsonSerializable()
 class BlockHeader {
   @JsonKey(name: 'accumulated_seed')

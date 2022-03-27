@@ -5,6 +5,8 @@ import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
+import 'package:casper_dart_sdk/src/types/block.dart';
 
 class CasperClient {
   final CasperNodeRpcClient _nodeClient;
@@ -21,21 +23,12 @@ class CasperClient {
   }
 
   /// Requests the state root hash of the node.
-  /// If [blockHash] or [blockHeight] is not provided, root hash of the global state is returned.
-  /// If [blockHash] is provided, the state root hash of the block with the given hash is returned.
-  /// If [blockHeight] is provided, the state root hash of the block at the given height is returned.
-  /// [blockHash] and [blockHeight] cannot be provided at the same time.
-  Future<GetStateRootHashResult> getStateRootHash({String? blockHash, int? blockHeight}) async {
-    if (blockHash != null) {
-      return _nodeClient.getStateRootHash(GetStateRootHashParams.fromBlockHash(blockHash));
-    } else if (blockHeight != null) {
-      return _nodeClient.getStateRootHash(GetStateRootHashParams.fromBlockHeight(blockHeight));
-    } else if (blockHash == null && blockHeight == null) {
+  /// If specified, requests the state root hash of the block identified by [blockId].
+  Future<GetStateRootHashResult> getStateRootHash([BlockId? blockId]) async {
+    if (blockId == null) {
       return _nodeClient.getStateRootHash();
     } else {
-      // blockHash == null && blockHeight != null
-      throw ArgumentError(
-          "If a parameter is specified, either blockHash or blockHeight must be specified, but not both.");
+      return _nodeClient.getStateRootHash(GetStateRootHashParams(blockId));
     }
   }
 
@@ -47,5 +40,10 @@ class CasperClient {
   /// Requests the current status of the node.
   Future<GetStatusResult> getStatus() async {
     return _nodeClient.getStatus();
+  }
+
+  /// Requests the block identified by [blockId] from the network.
+  Future<GetBlockResult> getBlock(BlockId blockId) async {
+    return _nodeClient.getBlock(GetBlockParams(blockId));
   }
 }

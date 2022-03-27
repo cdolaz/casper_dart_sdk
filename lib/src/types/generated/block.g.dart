@@ -85,13 +85,13 @@ Map<String, dynamic> _$RewardToJson(Reward instance) => <String, dynamic>{
 
 ValidatorWeight _$ValidatorWeightFromJson(Map<String, dynamic> json) =>
     ValidatorWeight(
-      const PublicKeyJsonConverter().fromJson(json['public_key'] as String),
+      const PublicKeyJsonConverter().fromJson(json['validator'] as String),
       json['weight'] == null ? null : BigInt.parse(json['weight'] as String),
     );
 
 Map<String, dynamic> _$ValidatorWeightToJson(ValidatorWeight instance) =>
     <String, dynamic>{
-      'public_key': const PublicKeyJsonConverter().toJson(instance.validator),
+      'validator': const PublicKeyJsonConverter().toJson(instance.validator),
       'weight': instance.weight?.toString(),
     };
 

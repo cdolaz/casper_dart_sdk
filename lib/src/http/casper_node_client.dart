@@ -4,6 +4,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
 
 class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   CasperNodeRpcClient(url) : super(url, {'User-Agent': 'CasperDart/0.1'});
@@ -13,16 +14,18 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   }
 
   Future<GetStateRootHashResult> getStateRootHash([GetStateRootHashParams? params]) async {
-    return GetStateRootHashResult.fromJson(
-        await call(RpcMethodName.chainGetStateRootHash, params));
+    return GetStateRootHashResult.fromJson(await call(RpcMethodName.chainGetStateRootHash, params));
   }
 
   Future<GetDeployResult> getDeploy(GetDeployParams params) async {
-    return GetDeployResult.fromJson(
-        await call(RpcMethodName.infoGetDeploy, params.toJson()));
+    return GetDeployResult.fromJson(await call(RpcMethodName.infoGetDeploy, params.toJson()));
   }
 
   Future<GetStatusResult> getStatus() async {
     return GetStatusResult.fromJson(await call(RpcMethodName.infoGetStatus));
+  }
+
+  Future<GetBlockResult> getBlock(GetBlockParams params) async {
+    return GetBlockResult.fromJson(await call(RpcMethodName.chainGetBlock, params.toJson()));
   }
 }

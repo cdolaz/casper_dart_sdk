@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io' show Platform, exit;
+
+import 'package:test/test.dart';
+
 import 'package:rpc_exceptions/rpc_exceptions.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
-import 'package:test/test.dart';
-import 'dart:io' show Platform, exit;
+import 'package:casper_dart_sdk/src/types/block.dart';
 
 void main() {
   group("Casper Dart SDK", () {
@@ -46,15 +49,15 @@ void main() {
     });
 
     test("can get state root hash using a block id", () async {
-      final result =
-          await node.getStateRootHash(blockHash: "1ed477b9f19d06989e1dcfef57b5170a30f8f8b997be9d9376e501049473257a");
+      final result = await node
+          .getStateRootHash(BlockId.fromHash("1ed477b9f19d06989e1dcfef57b5170a30f8f8b997be9d9376e501049473257a"));
       expect(result, isNotNull);
       expect(result.stateRootHash.length, 64);
       expect(result.apiVersion, isNotEmpty);
     });
 
     test("can get state root hash using block height", () async {
-      final result = await node.getStateRootHash(blockHeight: 10);
+      final result = await node.getStateRootHash(BlockId.fromHeight(10));
       expect(result, isNotNull);
       expect(result.stateRootHash.length, 64);
       expect(result.apiVersion, isNotEmpty);
@@ -83,6 +86,12 @@ void main() {
       expect(result.apiVersion, isNotEmpty);
       expect(result.chainspecName, "casper-test");
       expect(result.startingStateRootHash, isNotEmpty);
+    });
+
+    test("can get the block info", () async {
+      final result = await node.getBlock(BlockId.fromHeight(10));
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
     });
   });
 }
