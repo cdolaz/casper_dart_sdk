@@ -43,7 +43,8 @@ Map<String, dynamic> _$DeployToJson(Deploy instance) => <String, dynamic>{
 DeployHeader _$DeployHeaderFromJson(Map<String, dynamic> json) => DeployHeader(
       const PublicKeyJsonConverter().fromJson(json['account'] as String),
       const DateTimeJsonConverter().fromJson(json['timestamp'] as String),
-      const DurationJsonConverter().fromJson(json['ttl'] as String),
+      const HumanReadableDurationJsonConverter()
+          .fromJson(json['ttl'] as String),
       json['gas_price'] as int,
       const Cep57ChecksummedHexJsonConverter()
           .fromJson(json['body_hash'] as String),
@@ -55,7 +56,7 @@ Map<String, dynamic> _$DeployHeaderToJson(DeployHeader instance) =>
     <String, dynamic>{
       'account': const PublicKeyJsonConverter().toJson(instance.account),
       'timestamp': const DateTimeJsonConverter().toJson(instance.timestamp),
-      'ttl': const DurationJsonConverter().toJson(instance.ttl),
+      'ttl': const HumanReadableDurationJsonConverter().toJson(instance.ttl),
       'gas_price': instance.gasPrice,
       'body_hash':
           const Cep57ChecksummedHexJsonConverter().toJson(instance.bodyHash),

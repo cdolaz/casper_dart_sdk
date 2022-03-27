@@ -76,8 +76,20 @@ void main() {
       expect(result2, equals('52s'));
       expect(result3, equals('52secs'));
 
-      var r = DurationJsonConverter.shorten('53secs', "sec", "s");
+      var r = HumanReadableDurationJsonConverter.shorten('53secs', "sec", "s");
       expect(r, equals('53s'));
+    });
+
+    test("can convert human readable duration to Duration object", () {
+      String humanReadableDuration = '1hours 30m';
+      Duration duration = HumanReadableDurationJsonConverter().fromJson(humanReadableDuration);
+      expect(duration.inMinutes, 90);
+    });
+
+    test("can convert Duration object to human readable duration", () {
+      Duration duration = Duration(minutes: 90);
+      String humanReadableDuration = HumanReadableDurationJsonConverter().toJson(duration);
+      expect(humanReadableDuration, '1h 30m');
     });
 
     test("can capitalize first letter", () {

@@ -1,3 +1,4 @@
+import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
 import 'package:casper_dart_sdk/src/types/peer.dart';
@@ -32,6 +33,10 @@ class GetStatusResult extends RpcResult {
 
   @JsonKey(name: 'starting_state_root_hash')
   late String startingStateRootHash;
+  
+  @JsonKey(name: 'uptime')
+  @HumanReadableDurationJsonConverter()
+  late Duration uptime;
 
   GetStatusResult(apiVersion) : super(apiVersion);
 

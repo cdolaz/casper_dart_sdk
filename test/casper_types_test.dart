@@ -238,20 +238,6 @@ void testJsonConversions() {
         testExecutableDeployItemSerde();
       });
 
-      group("Duration", () {
-        test("can convert human readable duration to Duration object", () {
-          String humanReadableDuration = '1hours 30m';
-          Duration duration = DurationJsonConverter().fromJson(humanReadableDuration);
-          expect(duration.inMinutes, 90);
-        });
-
-        test("can convert Duration object to human readable duration", () {
-          Duration duration = Duration(minutes: 90);
-          String humanReadableDuration = DurationJsonConverter().toJson(duration);
-          expect(humanReadableDuration, '1h 30m');
-        });
-      });
-
       group("ClType", () {
         testClTypeSerde();
       });

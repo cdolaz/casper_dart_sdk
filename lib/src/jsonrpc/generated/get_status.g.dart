@@ -23,7 +23,9 @@ GetStatusResult _$GetStatusResultFromJson(Map<String, dynamic> json) =>
           .map((e) => Peer.fromJson(e as Map<String, dynamic>))
           .toList()
       ..roundLength = json['round_length'] as String?
-      ..startingStateRootHash = json['starting_state_root_hash'] as String;
+      ..startingStateRootHash = json['starting_state_root_hash'] as String
+      ..uptime = const HumanReadableDurationJsonConverter()
+          .fromJson(json['uptime'] as String);
 
 Map<String, dynamic> _$GetStatusResultToJson(GetStatusResult instance) =>
     <String, dynamic>{
@@ -37,4 +39,6 @@ Map<String, dynamic> _$GetStatusResultToJson(GetStatusResult instance) =>
       'peers': instance.peers,
       'round_length': instance.roundLength,
       'starting_state_root_hash': instance.startingStateRootHash,
+      'uptime':
+          const HumanReadableDurationJsonConverter().toJson(instance.uptime),
     };

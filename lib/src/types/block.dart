@@ -1,6 +1,6 @@
-import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 
 part 'generated/block.g.dart';
 
