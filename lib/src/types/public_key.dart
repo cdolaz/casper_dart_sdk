@@ -6,6 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
 class PublicKey {
   /// Byte array of the public key without the key algorithm identifier.
@@ -15,16 +16,14 @@ class PublicKey {
   KeyAlgorithm keyAlgorithm;
 
   factory PublicKey.fromHex(String hex) {
-    final Tuple2<Cep57ChecksumResult, Uint8List> decoded =
-        Cep57Checksum.decode(hex.substring(2));
+    final Tuple2<Cep57ChecksumResult, Uint8List> decoded = Cep57Checksum.decode(hex.substring(2));
 
     if (decoded.item1 == Cep57ChecksumResult.invalid) {
       throw ArgumentError('Public key checksum verification failed');
     }
 
     final Uint8List bytes = decoded.item2;
-    KeyAlgorithm algorithm =
-        keyAlgorithmFromIdentifierByte(hexStringToInt(hex.substring(0, 2)));
+    KeyAlgorithm algorithm = keyAlgorithmFromIdentifierByte(hexStringToInt(hex.substring(0, 2)));
 
     return PublicKey.fromBytes(bytes, algorithm);
   }
@@ -47,8 +46,7 @@ class PublicKey {
 
   // TODO: Signature verification
 
-  String get accountHex =>
-      keyAlgorithm.identifierByteHex + Cep57Checksum.encode(bytes);
+  String get accountHex => keyAlgorithm.identifierByteHex + Cep57Checksum.encode(bytes);
 
   @override
   String toString() {
@@ -70,4 +68,12 @@ class PublicKeyJsonConverter implements JsonConverter<PublicKey, String> {
   String toJson(PublicKey object) {
     return object.accountHex;
   }
+
+  factory PublicKeyJsonConverter.create() => PublicKeyJsonConverter();
+}
+
+// @JsonListConverter<PublicKey, String>(PublicKeyJsonConverter.create) annotation
+// is unable to generate code. Workaround:
+class PublicKeyJsonListConverter extends JsonListConverter<PublicKey, String> {
+  const PublicKeyJsonListConverter() : super(PublicKeyJsonConverter.create);
 }

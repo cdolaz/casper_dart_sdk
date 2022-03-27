@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:casper_dart_sdk/src/types/deploy.dart';
 import 'package:casper_dart_sdk/src/types/executable_deploy_item.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
+import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:convert/convert.dart';
 import 'package:test/test.dart';
 
@@ -237,9 +239,22 @@ void testJsonConversions() {
       group("ExecutableDeployItem", () {
         testExecutableDeployItemSerde();
       });
-
       group("ClType", () {
         testClTypeSerde();
+      });
+
+      test("generic list converter successfully deserializes from json", () {
+        final json = {
+          "list": [
+            "016e7a1cdd29b0b78fd13af4c5598feff4ef2a97166e3ca6f2e4fbfccd80505bf1",
+            "018a875fff1eb38451577acd5afee405456568dd7c89e090863a0557bc7af49f17",
+          ]
+        };
+
+        final list = JsonListConverter<PublicKey, String>(PublicKeyJsonConverter.create).fromJson(json['list']!);
+        expect(list.length, 2);
+        expect(list[0].accountHex.toLowerCase(), '016e7a1cdd29b0b78fd13af4c5598feff4ef2a97166e3ca6f2e4fbfccd80505bf1');
+        expect(list[1].accountHex.toLowerCase(), '018a875fff1eb38451577acd5afee405456568dd7c89e090863a0557bc7af49f17');
       });
     });
   });

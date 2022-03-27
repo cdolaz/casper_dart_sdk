@@ -6,3 +6,6 @@ targets:
         options:
           build_extensions:
             '^lib/{{dir}}/{{file}}.dart': 'lib/{{dir}}/generated/{{file}}.g.dart'
+      json_serializable:
+        options:
+          generic_argument_factories: true

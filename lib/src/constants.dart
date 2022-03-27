@@ -6,4 +6,5 @@ class RpcMethodName {
 
   // Chain
   static const String chainGetStateRootHash = "chain_get_state_root_hash";
+  static const String chainGetBlock = "chain_get_block";
 }
