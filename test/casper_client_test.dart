@@ -46,7 +46,8 @@ void main() {
     });
 
     test("can get state root hash using a block id", () async {
-      final result = await sdk.getStateRootHash(blockHash: "1ed477b9f19d06989e1dcfef57b5170a30f8f8b997be9d9376e501049473257a");
+      final result =
+          await sdk.getStateRootHash(blockHash: "1ed477b9f19d06989e1dcfef57b5170a30f8f8b997be9d9376e501049473257a");
       expect(result, isNotNull);
       expect(result.stateRootHash.length, 64);
       expect(result.apiVersion, isNotEmpty);
@@ -74,6 +75,14 @@ void main() {
         () async => await sdk.getDeploy("<invalid hash>"),
         throwsA(isA<RpcException>()),
       );
+    });
+
+    test("can get node's status info", () async {
+      final result = await sdk.getStatus();
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.chainspecName, isNotEmpty);
+      expect(result.startingStateRootHash, isNotEmpty);
     });
   });
 }

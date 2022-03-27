@@ -4,6 +4,7 @@ import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 
 class CasperClient {
   final CasperNodeRpcClient _nodeClient;
@@ -41,5 +42,10 @@ class CasperClient {
   /// Requests the deploy object with given [deployHash] from the network.
   Future<GetDeployResult> getDeploy(String deployHash) async {
     return _nodeClient.getDeploy(GetDeployParams(deployHash));
+  }
+
+  /// Requests the current status of the node.
+  Future<GetStatusResult> getStatus() async {
+    return _nodeClient.getStatus();
   }
 }
