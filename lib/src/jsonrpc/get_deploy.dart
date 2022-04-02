@@ -6,9 +6,8 @@ import 'package:casper_dart_sdk/src/jsonrpc/rpc_params.dart';
 
 part 'generated/get_deploy.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetDeployParams extends RpcParams {
-  @JsonKey(name: 'deploy_hash')
   String deployHash;
 
   factory GetDeployParams.fromJson(Map<String, dynamic> json) =>
@@ -20,9 +19,8 @@ class GetDeployParams extends RpcParams {
   GetDeployParams(this.deployHash) : super();
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetDeployResult extends RpcResult {
-  @JsonKey(name: 'deploy')
   Deploy deploy;
 
   factory GetDeployResult.fromJson(Map<String, dynamic> json) =>

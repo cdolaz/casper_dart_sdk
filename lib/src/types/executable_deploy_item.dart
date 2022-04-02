@@ -15,9 +15,8 @@ abstract class ExecutableDeployItem {
   ExecutableDeployItem(this.args);
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class ModuleBytesDeployItem extends ExecutableDeployItem {
-  @JsonKey(name: 'module_bytes')
   String moduleBytes;
 
   factory ModuleBytesDeployItem.fromJson(Map<String, dynamic> json) =>
@@ -28,12 +27,10 @@ class ModuleBytesDeployItem extends ExecutableDeployItem {
   ModuleBytesDeployItem(List<NamedArg> args, this.moduleBytes) : super(args);
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class StoredContractByNameDeployItem extends ExecutableDeployItem {
-  @JsonKey(name: 'name')
   String name;
 
-  @JsonKey(name: 'entry_point')
   String entryPoint;
 
   factory StoredContractByNameDeployItem.fromJson(Map<String, dynamic> json) =>
@@ -46,13 +43,11 @@ class StoredContractByNameDeployItem extends ExecutableDeployItem {
       : super(args);
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class StoredContractByHashDeployItem extends ExecutableDeployItem {
-  @JsonKey(name: 'hash')
   @HexBytesWithCep57ChecksumConverter()
   String hash;
 
-  @JsonKey(name: 'entry_point')
   String entryPoint;
 
   factory StoredContractByHashDeployItem.fromJson(Map<String, dynamic> json) =>
@@ -65,16 +60,13 @@ class StoredContractByHashDeployItem extends ExecutableDeployItem {
       : super(args);
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class StoredVersionedContractByHashDeployItem extends ExecutableDeployItem {
-  @JsonKey(name: 'hash')
   @HexBytesWithCep57ChecksumConverter()
   String hash;
 
-  @JsonKey(name: 'version')
   int? version;
 
-  @JsonKey(name: 'entry_point')
   String entryPoint;
 
   factory StoredVersionedContractByHashDeployItem.fromJson(
@@ -89,15 +81,12 @@ class StoredVersionedContractByHashDeployItem extends ExecutableDeployItem {
       : super(args);
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class StoredVersionedContractByNameDeployItem extends ExecutableDeployItem {
-  @JsonKey(name: 'name')
   String name;
 
-  @JsonKey(name: 'version')
   int? version;
 
-  @JsonKey(name: 'entry_point')
   String entryPoint;
 
   factory StoredVersionedContractByNameDeployItem.fromJson(

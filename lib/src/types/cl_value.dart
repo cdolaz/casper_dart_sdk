@@ -6,17 +6,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'generated/cl_value.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class ClValue {
   @JsonKey(name: 'cl_type')
   @ClTypeDescriptorJsonConverter()
   ClTypeDescriptor clTypeDescriptor;
-
-  @JsonKey(name: 'bytes')
+ 
   @HexBytesWithCep57ChecksumConverter()
   List<int> bytes;
 
-  @JsonKey(name: 'parsed')
   dynamic parsed;
 
   Uint8List get bytesAsUint8List => Uint8List.fromList(bytes);

@@ -3,12 +3,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'generated/named_arg.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class NamedArg {
-  @JsonKey(name: 'name')
   String name;
 
-  @JsonKey(name: 'value')
   ClValue value;
 
   factory NamedArg.fromJson(Map<String, dynamic> json) =>

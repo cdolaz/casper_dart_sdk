@@ -6,9 +6,8 @@ import 'package:casper_dart_sdk/src/types/block.dart';
 
 part 'generated/get_state_root_hash.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetStateRootHashParams extends RpcParams {
-  @JsonKey(name: 'block_identifier')
   BlockId blockIdentifier;
 
   factory GetStateRootHashParams.fromJson(Map<String, dynamic> json) => _$GetStateRootHashParamsFromJson(json);
@@ -19,9 +18,8 @@ class GetStateRootHashParams extends RpcParams {
   GetStateRootHashParams(this.blockIdentifier) : super();
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetStateRootHashResult extends RpcResult {
-  @JsonKey(name: 'state_root_hash')
   String stateRootHash;
 
   factory GetStateRootHashResult.fromJson(Map<String, dynamic> json) => _$GetStateRootHashResultFromJson(json);

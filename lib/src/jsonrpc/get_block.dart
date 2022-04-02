@@ -6,7 +6,7 @@ import 'package:casper_dart_sdk/src/types/block.dart';
 
 part 'generated/get_block.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetBlockParams extends RpcParams {
   @JsonKey(name: 'block_identifier')
   BlockId blockId;
@@ -19,9 +19,8 @@ class GetBlockParams extends RpcParams {
   GetBlockParams(this.blockId) : super();
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetBlockResult extends RpcResult {
-  @JsonKey(name: 'block')
   Block? block;
 
   factory GetBlockResult.fromJson(Map<String, dynamic> json) => _$GetBlockResultFromJson(json);

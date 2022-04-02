@@ -4,9 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'generated/get_peers.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class GetPeersResult extends RpcResult {
-  @JsonKey(name: 'peers')
   List<Peer> peers;
 
   factory GetPeersResult.fromJson(Map<String, dynamic> json) =>
