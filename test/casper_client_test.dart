@@ -88,10 +88,20 @@ void main() {
       expect(result.startingStateRootHash, isNotEmpty);
     });
 
-    test("can get the block info", () async {
+    test("can get the block info by its height", () async {
       final result = await node.getBlock(BlockId.fromHeight(10));
       expect(result, isNotNull);
       expect(result.apiVersion, isNotEmpty);
+      expect(result.block, isNotNull);
+      expect(result.block!.header.height, 10);
+    });
+
+    test("can get block info by its hash", () async {
+      final result = await node.getBlock(BlockId.fromHash("63fba0849c1301c2ecad7772432060cdb4ab6cad3e3a5ebec2d3eeee5ea986fb"));
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.block, isNotNull);
+      expect(result.block!.hash, "63fba0849c1301c2ecad7772432060cdb4ab6cad3e3a5ebec2d3eeee5ea986fb");
     });
   });
 }

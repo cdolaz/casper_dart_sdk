@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/signature.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
@@ -15,16 +16,16 @@ class Block {
   @JsonKey(name: 'header')
   BlockHeader header;
 
-  // @JsonKey(name: 'body')
-  // BlockBody body;
+  @JsonKey(name: 'body')
+  BlockBody body;
 
-  // @JsonKey(name: 'proofs')
-  // List<BlockProof> proofs;
+  @JsonKey(name: 'proofs')
+  List<BlockProof> proofs;
 
   factory Block.fromJson(Map<String, dynamic> json) => _$BlockFromJson(json);
   Map<String, dynamic> toJson() => _$BlockToJson(this);
 
-  Block(this.hash, this.header /*, this.body, this.proofs*/);
+  Block(this.hash, this.header, this.body, this.proofs);
 }
 
 @JsonSerializable(ignoreUnannotated: true, createFactory: false, createToJson: false)
@@ -87,7 +88,7 @@ class BlockHeader {
   late String bodyHash;
 
   @JsonKey(name: 'era_end')
-  late EraEnd eraEnd;
+  late EraEnd? eraEnd;
 
   @JsonKey(name: 'era_id')
   late int eraId;
@@ -115,6 +116,37 @@ class BlockHeader {
   Map<String, dynamic> toJson() => _$BlockHeaderToJson(this);
 
   BlockHeader();
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class BlockBody {
+  List<String> deployHashes;
+
+  @PublicKeyJsonConverter()
+  PublicKey proposer;
+
+  List<String> transferHashes;
+
+  factory BlockBody.fromJson(Map<String, dynamic> json) => _$BlockBodyFromJson(json);
+  Map<String, dynamic> toJson() => _$BlockBodyToJson(this);
+
+  BlockBody(this.deployHashes, this.proposer, this.transferHashes);
+}
+
+@JsonSerializable()
+class BlockProof {
+  @JsonKey(name: 'public_key')
+  @PublicKeyJsonConverter()
+  PublicKey publicKey;
+
+  @JsonKey(name: 'signature')
+  @SignatureJsonConverter()
+  Signature signature;
+
+  factory BlockProof.fromJson(Map<String, dynamic> json) => _$BlockProofFromJson(json);
+  Map<String, dynamic> toJson() => _$BlockProofToJson(this);
+
+  BlockProof(this.publicKey, this.signature);
 }
 
 @JsonSerializable()

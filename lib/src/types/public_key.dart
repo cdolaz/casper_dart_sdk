@@ -74,6 +74,6 @@ class PublicKeyJsonConverter implements JsonConverter<PublicKey, String> {
 
 // @JsonListConverter<PublicKey, String>(PublicKeyJsonConverter.create) annotation
 // is unable to generate code. Workaround:
-class PublicKeyJsonListConverter extends JsonListConverter<PublicKey, String> {
+class PublicKeyJsonListConverter extends JsonListConverter<PublicKey> {
   const PublicKeyJsonListConverter() : super(PublicKeyJsonConverter.create);
 }

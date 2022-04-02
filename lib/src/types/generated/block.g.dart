@@ -9,17 +9,25 @@ part of '../block.dart';
 Block _$BlockFromJson(Map<String, dynamic> json) => Block(
       json['hash'] as String,
       BlockHeader.fromJson(json['header'] as Map<String, dynamic>),
+      BlockBody.fromJson(json['body'] as Map<String, dynamic>),
+      (json['proofs'] as List<dynamic>)
+          .map((e) => BlockProof.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$BlockToJson(Block instance) => <String, dynamic>{
       'hash': instance.hash,
       'header': instance.header,
+      'body': instance.body,
+      'proofs': instance.proofs,
     };
 
 BlockHeader _$BlockHeaderFromJson(Map<String, dynamic> json) => BlockHeader()
   ..accumulatedSeed = json['accumulated_seed'] as String
   ..bodyHash = json['body_hash'] as String
-  ..eraEnd = EraEnd.fromJson(json['era_end'] as Map<String, dynamic>)
+  ..eraEnd = json['era_end'] == null
+      ? null
+      : EraEnd.fromJson(json['era_end'] as Map<String, dynamic>)
   ..eraId = json['era_id'] as int
   ..height = json['height'] as int
   ..parentHash = json['parent_hash'] as String
@@ -43,6 +51,31 @@ Map<String, dynamic> _$BlockHeaderToJson(BlockHeader instance) =>
       'timestamp': const DateTimeJsonConverter().toJson(instance.timestamp),
     };
 
+BlockBody _$BlockBodyFromJson(Map<String, dynamic> json) => BlockBody(
+      (json['deploy_hashes'] as List<dynamic>).map((e) => e as String).toList(),
+      const PublicKeyJsonConverter().fromJson(json['proposer'] as String),
+      (json['transfer_hashes'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$BlockBodyToJson(BlockBody instance) => <String, dynamic>{
+      'deploy_hashes': instance.deployHashes,
+      'proposer': const PublicKeyJsonConverter().toJson(instance.proposer),
+      'transfer_hashes': instance.transferHashes,
+    };
+
+BlockProof _$BlockProofFromJson(Map<String, dynamic> json) => BlockProof(
+      const PublicKeyJsonConverter().fromJson(json['public_key'] as String),
+      const SignatureJsonConverter().fromJson(json['signature'] as String),
+    );
+
+Map<String, dynamic> _$BlockProofToJson(BlockProof instance) =>
+    <String, dynamic>{
+      'public_key': const PublicKeyJsonConverter().toJson(instance.publicKey),
+      'signature': const SignatureJsonConverter().toJson(instance.signature),
+    };
+
 EraEnd _$EraEndFromJson(Map<String, dynamic> json) => EraEnd(
       EraReport.fromJson(json['era_report'] as Map<String, dynamic>),
       (json['next_era_validator_weights'] as List<dynamic>)
@@ -56,10 +89,9 @@ Map<String, dynamic> _$EraEndToJson(EraEnd instance) => <String, dynamic>{
     };
 
 EraReport _$EraReportFromJson(Map<String, dynamic> json) => EraReport(
+      const PublicKeyJsonListConverter().fromJson(json['equivocators'] as List),
       const PublicKeyJsonListConverter()
-          .fromJson(json['equivocators'] as List<String>),
-      const PublicKeyJsonListConverter()
-          .fromJson(json['inactive_validators'] as List<String>),
+          .fromJson(json['inactive_validators'] as List),
       (json['rewards'] as List<dynamic>)
           .map((e) => Reward.fromJson(e as Map<String, dynamic>))
           .toList(),
