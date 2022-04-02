@@ -44,5 +44,5 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         env:
-          CASPER_NODE_RPC_URL: ${{ secrets.CASPER_NODE_RPC_URL }}
+          CASPER_TEST_NODE_RPC_URL: ${{ secrets.CASPER_TEST_NODE_RPC_URL }}
         run: dart test
