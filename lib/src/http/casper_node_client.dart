@@ -1,5 +1,6 @@
 import 'package:casper_dart_sdk/src/constants.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
@@ -8,6 +9,10 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
 
 class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   CasperNodeRpcClient(url) : super(url, {'User-Agent': 'CasperDart/0.1'});
+
+  Future<dynamic> getRpcSchema() async {
+    return await call(RpcMethodName.rpcDiscover);
+  }
 
   Future<GetPeersResult> getPeers() async {
     return GetPeersResult.fromJson(await call(RpcMethodName.infoGetPeers));
@@ -27,5 +32,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<GetBlockResult> getBlock(GetBlockParams params) async {
     return GetBlockResult.fromJson(await call(RpcMethodName.chainGetBlock, params.toJson()));
+  }
+
+  Future<GetBlockTransfersResult> getBlockTransfers(GetBlockTransfersParams params) async {
+    return GetBlockTransfersResult.fromJson(await call(RpcMethodName.chainGetBlockTransfers, params.toJson()));
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
@@ -16,6 +17,10 @@ class CasperClient {
   /// [nodeUri] is the URI of the Casper node to connect to, including its RPC endpoint.
   /// For example, `Uri.parse("http://127.0.0.1:7777/rpc")`
   CasperClient(Uri nodeUri) : _nodeClient = CasperNodeRpcClient(nodeUri);
+
+  Future<dynamic> getRpcSchema() async {
+    return _nodeClient.getRpcSchema();
+  }
 
   /// Requests the list of peers connected to the node.
   Future<GetPeersResult> getPeers() async {
@@ -45,5 +50,10 @@ class CasperClient {
   /// Requests the block identified by [blockId] from the network.
   Future<GetBlockResult> getBlock(BlockId blockId) async {
     return _nodeClient.getBlock(GetBlockParams(blockId));
+  }
+
+  /// Requests the block transfers of the block identified by [blockId] from the network.
+  Future<GetBlockTransfersResult> getBlockTransfers(BlockId blockId) async {
+    return _nodeClient.getBlockTransfers(GetBlockTransfersParams(blockId));
   }
 }

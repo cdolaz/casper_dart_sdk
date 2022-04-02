@@ -30,6 +30,11 @@ void main() {
 
     // TODO: Mocking client responses with ground truths could be better instead of relying on a test node.
 
+    test("can get RPC schema", () async {
+      final schema = await node.getRpcSchema();
+      expect(schema, isNotNull);
+    });
+
     test("can get node peers", () async {
       final result = await node.getPeers();
       expect(result, isNotNull);
@@ -102,6 +107,11 @@ void main() {
       expect(result.apiVersion, isNotEmpty);
       expect(result.block, isNotNull);
       expect(result.block!.hash, "63fba0849c1301c2ecad7772432060cdb4ab6cad3e3a5ebec2d3eeee5ea986fb");
+    });
+
+    test("can get block transfers by block hash", () async {
+      final result = await node.getBlockTransfers(BlockId.fromHash("a1f829cff2389cf6637ed89fb2fab48351b1278c131ee8445e1e28333c9a44d0"));
+      expect(result.transfers, isNotEmpty);
     });
   });
 }

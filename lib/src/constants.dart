@@ -1,4 +1,6 @@
 class RpcMethodName {
+  static const String rpcDiscover = 'rpc.discover';
+
   // Info
   static const String infoGetPeers = "info_get_peers";
   static const String infoGetDeploy = "info_get_deploy";
@@ -7,4 +9,5 @@ class RpcMethodName {
   // Chain
   static const String chainGetStateRootHash = "chain_get_state_root_hash";
   static const String chainGetBlock = "chain_get_block";
+  static const String chainGetBlockTransfers = "chain_get_block_transfers";
 }

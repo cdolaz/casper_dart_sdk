@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:casper_dart_sdk/src/types/signature.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
-import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
 part 'generated/block.g.dart';
 
