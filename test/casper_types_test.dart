@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:casper_dart_sdk/src/types/deploy.dart';

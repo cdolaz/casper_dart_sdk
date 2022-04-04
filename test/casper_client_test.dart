@@ -1,14 +1,9 @@
-import 'dart:convert';
-import 'dart:math';
-import 'dart:io' show Platform, exit;
+import 'dart:io' show Platform;
 
 import 'package:test/test.dart';
 
 import 'package:rpc_exceptions/rpc_exceptions.dart';
-import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/casper_sdk.dart';
-import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
-import 'package:casper_dart_sdk/src/types/block.dart';
 
 void main() {
   group("Casper Dart SDK", () {

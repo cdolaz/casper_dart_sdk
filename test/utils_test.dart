@@ -3,10 +3,8 @@ import 'dart:typed_data';
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
-import 'package:casper_dart_sdk/src/types/deploy.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
-import 'package:tuple/tuple.dart';
 import 'package:convert/convert.dart';
 
 void main() {
