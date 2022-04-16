@@ -5,7 +5,6 @@ import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
-import 'package:convert/convert.dart';
 
 void main() {
   group("Byte utils", () {
@@ -23,13 +22,14 @@ void main() {
       expect(
           bits,
           equals([
+            0x1,
+            0x0,
+            0x0,
             0x0,
             0x0,
             0x0,
             0x0,
             0x0,
-            0x0,
-            0x0,
             0x1,
             0x1,
             0x1,
@@ -40,13 +40,12 @@ void main() {
             0x1,
             0x1,
             0x0,
-            0x0,
-            0x1,
             0x1,
             0x0,
             0x1,
+            0x1,
             0x0,
-            0x1
+            0x0
           ]));
     });
   });
@@ -99,9 +98,17 @@ void main() {
 
   group("Casper Dart SDK", () {
     group("CEP-57", () {
+      void testCep57Encoder(String hash) {
+        final result = Cep57Checksum.decode(hash);
+        final checksumResult = result.item1;
+        final bytes = result.item2;
+        expect(checksumResult, equals(Cep57ChecksumResult.valid));
+        expect(hash, equals(Cep57Checksum.encode(bytes)));
+      }
       test("can encode checksummed string", () {
-        final String result = Cep57Checksum.encode(Uint8List.fromList(hex.decode("0123456789abcdef")));
-        expect(false, isHexStringSameCase(result));
+        testCep57Encoder("eA1D6C19ccAeb35Ae717065c250E0F7F6Dc64AC3c6494a797E0b33A23CA1f1b9");
+        testCep57Encoder("98d945f5324F865243B7c02C0417AB6eaC361c5c56602FD42ced834a1Ba201B6");
+        testCep57Encoder("8cf5E4aCF51f54Eb59291599187838Dc3BC234089c46fc6cA8AD17e762aE4401");
       });
     });
   });

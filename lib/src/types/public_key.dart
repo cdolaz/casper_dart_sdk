@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:pointycastle/digests/blake2b.dart';
 import 'package:tuple/tuple.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:cryptography/dart.dart';
 
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
@@ -52,15 +52,15 @@ class PublicKey {
 
   /// Returns prefixed account hash key
   String get accountHash {
-    DartBlake2b blake2b = DartBlake2b();
+    final blake2 = Blake2bDigest(digestSize: 32);
     final algoName = keyAlgorithm.name.toLowerCase();
-    final blake2bSink = blake2b.newHashSink();
-    blake2bSink.add(utf8.encode(algoName));
-    blake2bSink.add([0]);
-    blake2bSink.add(bytes);
-    blake2bSink.close();
-    final hash = blake2bSink.hashSync().bytes;
-    return "account-hash-" + Cep57Checksum.encode(Uint8List.fromList(hash));
+    final algoNameBytes = Uint8List.fromList(utf8.encode(algoName));
+    blake2.update(algoNameBytes, 0, algoNameBytes.length);
+    blake2.update(Uint8List.fromList([0]), 0, 1);
+    blake2.update(bytes, 0, bytes.length);
+    Uint8List hash = Uint8List(32);
+    blake2.doFinal(hash, 0);
+    return "account-hash-" + Cep57Checksum.encode(hash);
   }
 
   @override

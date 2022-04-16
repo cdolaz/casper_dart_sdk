@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:cryptography/dart.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pointycastle/digests/blake2b.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
@@ -49,17 +49,15 @@ class Cep57Checksum {
       return hex.encode(bytes.toList());
     }
 
-    final DartBlake2b blake2b = DartBlake2b();
-    final blake2bSink = blake2b.newHashSink();
-    blake2bSink.add(bytes);
-    blake2bSink.close();
-    final hashBits = bytesToBits(blake2bSink.hashSync().bytes).toList();
+    final blake2 = Blake2bDigest(digestSize: 32);
+    final blake2Hashed = blake2.process(bytes);
+    final hashBits = bytesToBits(blake2Hashed).toList();
 
     final inputNibbles = bytesToNibbles(bytes);
     var buffer = StringBuffer();
     int bitIndex = 0;
-    for (var element in inputNibbles) {
-      final c = hexChars[element].codeUnitAt(0);
+    for (var nibble in inputNibbles) {
+      final c = hexChars[nibble].codeUnitAt(0);
       if ((c >= 'a'.codeUnitAt(0) && c <= 'f'.codeUnitAt(0)) &&
           hashBits[bitIndex++ % hashBits.length] != 0) {
         final upperC = c - 'a'.codeUnitAt(0) + 'A'.codeUnitAt(0);

@@ -16,9 +16,9 @@ dev_dependencies:
 
 dependencies:
   convert: ^3.0.1
-  cryptography: ^2.0.5
   http: ^0.13.4
   json_annotation: ^4.4.0
   jsonrpc2: ^3.0.1
+  pointycastle: ^3.5.2
   tuple: ^2.0.0
 
