@@ -109,5 +109,11 @@ void main() {
       final result = await node.getBlockTransfers(BlockId.fromHash("a1f829cff2389cf6637ed89fb2fab48351b1278c131ee8445e1e28333c9a44d0"));
       expect(result.transfers, isNotEmpty);
     });
+
+    test("can get balance", () async {
+      Uref purse = Uref("uref-54fd72455872082a254b0160e94a86245acd0c441f526688bda1261d0969057a-007");
+      final result = await node.getBalance(purse);
+      expect(result, isNotNull);
+    }); 
   });
 }

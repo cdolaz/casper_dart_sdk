@@ -17,7 +17,7 @@ class GetBalanceParams extends RpcParams {
   @override
   Map<String, dynamic> toJson() => _$GetBalanceParamsToJson(this);
 
-  GetBalanceParams(this.stateRootHash, this.purseUref) : super();
+  GetBalanceParams(this.purseUref, this.stateRootHash) : super();
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

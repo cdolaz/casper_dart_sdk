@@ -1,5 +1,7 @@
+import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/constants.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
@@ -36,5 +38,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<GetBlockTransfersResult> getBlockTransfers(GetBlockTransfersParams params) async {
     return GetBlockTransfersResult.fromJson(await call(RpcMethodName.chainGetBlockTransfers, params.toJson()));
+  }
+
+  Future<GetBalanceResult> getBalance(GetBalanceParams params) async {
+    return GetBalanceResult.fromJson(await call(RpcMethodName.stateGetBalance, params.toJson()));
   }
 }

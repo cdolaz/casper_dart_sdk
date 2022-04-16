@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
@@ -55,5 +56,11 @@ class CasperClient {
   /// Requests the block transfers of the block identified by [blockId] from the network.
   Future<GetBlockTransfersResult> getBlockTransfers(BlockId blockId) async {
     return _nodeClient.getBlockTransfers(GetBlockTransfersParams(blockId));
+  }
+
+  /// Requests a purse’s balance from the network.
+  Future<GetBalanceResult> getBalance(Uref purseUref, [String? stateRootHash]) async {
+    stateRootHash ??= await getStateRootHash().then((result) => result.stateRootHash);
+    return _nodeClient.getBalance(GetBalanceParams(purseUref, stateRootHash!));
   }
 }

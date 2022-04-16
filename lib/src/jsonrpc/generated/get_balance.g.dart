@@ -8,8 +8,8 @@ part of '../get_balance.dart';
 
 GetBalanceParams _$GetBalanceParamsFromJson(Map<String, dynamic> json) =>
     GetBalanceParams(
-      json['state_root_hash'] as String,
       const UrefJsonConverter().fromJson(json['purse_uref'] as String),
+      json['state_root_hash'] as String,
     );
 
 Map<String, dynamic> _$GetBalanceParamsToJson(GetBalanceParams instance) =>
