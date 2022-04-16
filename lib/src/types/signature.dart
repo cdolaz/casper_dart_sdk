@@ -18,16 +18,14 @@ class Signature {
   /// Creates a [Signature] object from a hexadecimal string representation.
   /// The hexadecimal string is prefixed with [keyAlgorithm.identifierByteHex].
   factory Signature.fromHex(String hexStr) {
-    final Tuple2<Cep57ChecksumResult, Uint8List> decoded =
-        Cep57Checksum.decode(hexStr.substring(2));
+    final Tuple2<Cep57ChecksumResult, Uint8List> decoded = Cep57Checksum.decode(hexStr.substring(2));
 
     if (decoded.item1 == Cep57ChecksumResult.invalid) {
       throw ArgumentError('Signature checksum verification failed');
     }
 
     final Uint8List bytes = decoded.item2;
-    KeyAlgorithm algorithm =
-        keyAlgorithmFromIdentifierByte(hexStringToInt(hexStr.substring(0, 2)));
+    KeyAlgorithm algorithm = KeyAlgorithmExt.fromIdentifierByte(hexStringToInt(hexStr.substring(0, 2)));
 
     return Signature.fromBytes(bytes, algorithm);
   }
@@ -40,7 +38,7 @@ class Signature {
   /// Creates a Signature object from a byte array that includes the
   /// key algorithm identifier byte as the first byte.
   factory Signature.fromBytesWithAlgorithmIdentifier(Uint8List bytes) {
-    KeyAlgorithm algorithm = keyAlgorithmFromIdentifierByte(bytes[0]);
+    KeyAlgorithm algorithm = KeyAlgorithmExt.fromIdentifierByte(bytes[0]);
     return Signature.fromBytes(bytes.sublist(1), algorithm);
   }
 

@@ -17,15 +17,15 @@ extension KeyAlgorithmExt on KeyAlgorithm {
         return 33;
     }
   }
-}
 
-KeyAlgorithm keyAlgorithmFromIdentifierByte(int value) {
-  switch (value) {
-    case 1:
-      return KeyAlgorithm.ed25519;
-    case 2:
-      return KeyAlgorithm.secp256k1;
-    default:
-      throw ArgumentError.value(value, 'value', 'Unknown key algorithm');
+  static KeyAlgorithm fromIdentifierByte(int byte) {
+    switch (byte) {
+      case 1:
+        return KeyAlgorithm.ed25519;
+      case 2:
+        return KeyAlgorithm.secp256k1;
+      default:
+        throw ArgumentError.value(byte, 'value', 'Unknown key algorithm');
+    }
   }
 }

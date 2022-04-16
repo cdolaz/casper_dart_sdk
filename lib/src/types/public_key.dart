@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:tuple/tuple.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:cryptography/dart.dart';
 
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
@@ -23,7 +25,7 @@ class PublicKey {
     }
 
     final Uint8List bytes = decoded.item2;
-    KeyAlgorithm algorithm = keyAlgorithmFromIdentifierByte(hexStringToInt(hex.substring(0, 2)));
+    KeyAlgorithm algorithm = KeyAlgorithmExt.fromIdentifierByte(hexStringToInt(hex.substring(0, 2)));
 
     return PublicKey.fromBytes(bytes, algorithm);
   }
@@ -47,6 +49,19 @@ class PublicKey {
   // TODO: Signature verification
 
   String get accountHex => keyAlgorithm.identifierByteHex + Cep57Checksum.encode(bytes);
+
+  /// Returns prefixed account hash key
+  String get accountHash {
+    DartBlake2b blake2b = DartBlake2b();
+    final algoName = keyAlgorithm.name.toLowerCase();
+    final blake2bSink = blake2b.newHashSink();
+    blake2bSink.add(utf8.encode(algoName));
+    blake2bSink.add([0]);
+    blake2bSink.add(bytes);
+    blake2bSink.close();
+    final hash = blake2bSink.hashSync().bytes;
+    return "account-hash-" + Cep57Checksum.encode(Uint8List.fromList(hash));
+  }
 
   @override
   String toString() {

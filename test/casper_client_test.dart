@@ -15,6 +15,7 @@ void main() {
           "Please set the environment variable CASPER_TEST_NODE_RPC_URL to the to "
           "the URL of the test-only Casper node that runs the RPC server.";
       expect(serverUrl, isNotNull, reason: explanation);
+      expect(serverUrl, isNotEmpty, reason: explanation);
     });
 
     if (serverUrl == null) {

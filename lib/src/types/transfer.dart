@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'generated/transfer.g.dart';
@@ -10,20 +11,20 @@ class Transfer {
 
   late String deployHash;
 
-  // TODO: Convert to concrete type, AccountHash
-  late String from;
+  @AccountHashKeyJsonConverter()
+  late AccountHashKey from;
 
   late BigInt gas;
 
   late int? id;
 
-  // TODO: Convert to concrete type, URef
-  late String source;
+  @UrefJsonConverter()
+  late Uref source;
 
-  // TODO: Convert to concrete type, URef
-  late String target;
+  @UrefJsonConverter()
+  late Uref target;
 
-  // TODO: Convert to concrete type, AccountHash
+  @AccountHashKeyJsonConverter()
   late String? to;
 
   factory Transfer.fromJson(Map<String, dynamic> json) => _$TransferFromJson(json);
