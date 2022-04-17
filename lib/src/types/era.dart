@@ -1,10 +1,10 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
 import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:casper_dart_sdk/src/types/stored_value.dart';
+import 'package:casper_dart_sdk/src/types/validator_weight.dart';
 
 part 'generated/era.g.dart';
 
@@ -31,21 +31,32 @@ class EraSummary {
 
   String merkleProof;
 
-  factory EraSummary.fromJson(Map<String, dynamic> json) =>
-      _$EraSummaryFromJson(json);
+  factory EraSummary.fromJson(Map<String, dynamic> json) => _$EraSummaryFromJson(json);
   Map<String, dynamic> toJson() => _$EraSummaryToJson(this);
 
-  EraSummary(this.blockHash, this.eraId, this.storedValue, this.stateRootHash,
-      this.merkleProof);
+  EraSummary(this.blockHash, this.eraId, this.storedValue, this.stateRootHash, this.merkleProof);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class EraValidators {
+  int eraId;
+
+  @ValidatorWeightJsonListConverter()
+  List<ValidatorWeight> validatorWeights;
+
+  factory EraValidators.fromJson(Map<String, dynamic> json) => _$EraValidatorsFromJson(json);
+  Map<String, dynamic> toJson() => _$EraValidatorsToJson(this);
+
+  EraValidators(this.eraId, this.validatorWeights);
 }
 
 class SeigniorageAllocation {
   bool isDelegator;
-  
+
   PublicKey? delegatorPublicKey;
 
   PublicKey? validatorPublicKey;
-  
+
   BigInt amount;
 
   SeigniorageAllocation(this.isDelegator, this.delegatorPublicKey, this.validatorPublicKey, this.amount);
@@ -63,7 +74,7 @@ class SeigniorageAllocationJsonConverter extends JsonConverter<SeigniorageAlloca
     PublicKey? validatorPublicKey;
     if (inner.containsKey("delegator_public_key")) {
       delegatorPublicKey = PublicKeyJsonConverter().fromJson(inner["delegator_public_key"]);
-    } 
+    }
     if (inner.containsKey("validator_public_key")) {
       validatorPublicKey = PublicKeyJsonConverter().fromJson(inner["validator_public_key"]);
     }

@@ -34,3 +34,17 @@ Map<String, dynamic> _$EraSummaryToJson(EraSummary instance) =>
       'state_root_hash': instance.stateRootHash,
       'merkle_proof': instance.merkleProof,
     };
+
+EraValidators _$EraValidatorsFromJson(Map<String, dynamic> json) =>
+    EraValidators(
+      json['era_id'] as int,
+      const ValidatorWeightJsonListConverter()
+          .fromJson(json['validator_weights'] as List),
+    );
+
+Map<String, dynamic> _$EraValidatorsToJson(EraValidators instance) =>
+    <String, dynamic>{
+      'era_id': instance.eraId,
+      'validator_weights': const ValidatorWeightJsonListConverter()
+          .toJson(instance.validatorWeights),
+    };

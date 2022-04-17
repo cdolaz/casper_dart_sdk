@@ -87,6 +87,28 @@ class PublicKeyJsonConverter implements JsonConverter<PublicKey, String> {
   factory PublicKeyJsonConverter.create() => PublicKeyJsonConverter();
 }
 
+class PublicKeyNullableJsonConverter implements JsonConverter<PublicKey?, String?> {
+  const PublicKeyNullableJsonConverter();
+
+  @override
+  PublicKey? fromJson(String? json) {
+    if (json == null) {
+      return null;
+    }
+    return PublicKey.fromHex(json);
+  }
+
+  @override
+  String? toJson(PublicKey? object) {
+    if (object == null) {
+      return null;
+    }
+    return object.accountHex;
+  }
+
+  factory PublicKeyNullableJsonConverter.create() => PublicKeyNullableJsonConverter();
+}
+
 // @JsonListConverter<PublicKey, String>(PublicKeyJsonConverter.create) annotation
 // is unable to generate code. Workaround:
 class PublicKeyJsonListConverter extends JsonListConverter<PublicKey> {

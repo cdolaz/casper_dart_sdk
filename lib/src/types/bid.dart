@@ -11,7 +11,7 @@ part 'generated/bid.g.dart';
 class Bid {
   @UrefJsonConverter()
   Uref bondingPurse;
-  
+
   int delegationRate;
 
   @DelegatorJsonListConverter()
@@ -21,14 +21,26 @@ class Bid {
 
   BigInt stakedAmount;
 
-  @PublicKeyJsonConverter()
-  @JsonKey(name: 'validator_public_key')
-  PublicKey publicKey;
+  @PublicKeyNullableJsonConverter()
+  PublicKey? validatorPublicKey;
 
-  VestingSchedule vestingSchedule;
+  VestingSchedule? vestingSchedule;
 
   factory Bid.fromJson(Map<String, dynamic> json) => _$BidFromJson(json);
   Map<String, dynamic> toJson() => _$BidToJson(this);
 
-  Bid(this.bondingPurse, this.delegationRate, this.delegators, this.inactive, this.stakedAmount, this.publicKey, this.vestingSchedule);
+  Bid(this.bondingPurse, this.delegationRate, this.delegators, this.inactive, this.stakedAmount,
+      this.validatorPublicKey, this.vestingSchedule);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class ValidatorBid {
+  @PublicKeyJsonConverter()
+  PublicKey publicKey;
+  Bid bid;
+
+  factory ValidatorBid.fromJson(Map<String, dynamic> json) => _$ValidatorBidFromJson(json);
+  Map<String, dynamic> toJson() => _$ValidatorBidToJson(this);
+
+  ValidatorBid(this.publicKey, this.bid);
 }

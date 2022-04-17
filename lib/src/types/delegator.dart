@@ -8,7 +8,7 @@ import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 class Delegator {
   Uref bondingPurse;
 
-  PublicKey delegatee;
+  PublicKey? delegatee;
 
   PublicKey publicKey;
 
@@ -28,7 +28,7 @@ class DelegatorJsonConverter extends JsonConverter<Delegator, Map<String, dynami
     if (json.containsKey("bonding_purse")) {
       bondingPurse = UrefJsonConverter().fromJson(json["bonding_purse"]);
     }
-    late PublicKey delegatee;
+    PublicKey? delegatee;
     if (json.containsKey("validator_public_key")) {
       delegatee = PublicKeyJsonConverter().fromJson(json["validator_public_key"]);
     }
@@ -42,7 +42,7 @@ class DelegatorJsonConverter extends JsonConverter<Delegator, Map<String, dynami
     if (json.containsKey("staked_amount")) {
       stakedAmount = BigInt.parse(json["staked_amount"]);
     }
-    late VestingSchedule vestingSchedule;
+    VestingSchedule? vestingSchedule;
     if (json.containsKey("vesting_schedule")) {
       vestingSchedule = VestingSchedule.fromJson(json["vesting_schedule"]);
     }
@@ -51,13 +51,18 @@ class DelegatorJsonConverter extends JsonConverter<Delegator, Map<String, dynami
 
   @override
   Map<String, dynamic> toJson(Delegator object) {
-    return {
+    final Map<String, dynamic> json = {
       "bonding_purse": UrefJsonConverter().toJson(object.bondingPurse),
-      "validator_public_key": PublicKeyJsonConverter().toJson(object.delegatee),
       "delegator_public_key": PublicKeyJsonConverter().toJson(object.publicKey),
       "staked_amount": object.stakedAmount.toString(),
-      "vesting_schedule": object.vestingSchedule?.toJson(),
     };
+    if (object.delegatee != null) {
+      json["validator_public_key"] = PublicKeyJsonConverter().toJson(object.delegatee!);
+    }
+    if (object.vestingSchedule != null) {
+      json["vesting_schedule"] = object.vestingSchedule!.toJson();
+    }
+    return json;
   }
 
   factory DelegatorJsonConverter.create() => DelegatorJsonConverter();

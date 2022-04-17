@@ -78,14 +78,14 @@ Map<String, dynamic> _$BlockProofToJson(BlockProof instance) =>
 
 EraEnd _$EraEndFromJson(Map<String, dynamic> json) => EraEnd(
       EraReport.fromJson(json['era_report'] as Map<String, dynamic>),
-      (json['next_era_validator_weights'] as List<dynamic>)
-          .map((e) => ValidatorWeight.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      const ValidatorWeightJsonListConverter()
+          .fromJson(json['next_era_validator_weights'] as List),
     );
 
 Map<String, dynamic> _$EraEndToJson(EraEnd instance) => <String, dynamic>{
       'era_report': instance.eraReport,
-      'next_era_validator_weights': instance.nextEraValidatorWeights,
+      'next_era_validator_weights': const ValidatorWeightJsonListConverter()
+          .toJson(instance.nextEraValidatorWeights),
     };
 
 EraReport _$EraReportFromJson(Map<String, dynamic> json) => EraReport(
@@ -113,18 +113,6 @@ Reward _$RewardFromJson(Map<String, dynamic> json) => Reward(
 Map<String, dynamic> _$RewardToJson(Reward instance) => <String, dynamic>{
       'amount': instance.amount,
       'validator': const PublicKeyJsonConverter().toJson(instance.validator),
-    };
-
-ValidatorWeight _$ValidatorWeightFromJson(Map<String, dynamic> json) =>
-    ValidatorWeight(
-      const PublicKeyJsonConverter().fromJson(json['validator'] as String),
-      json['weight'] == null ? null : BigInt.parse(json['weight'] as String),
-    );
-
-Map<String, dynamic> _$ValidatorWeightToJson(ValidatorWeight instance) =>
-    <String, dynamic>{
-      'validator': const PublicKeyJsonConverter().toJson(instance.validator),
-      'weight': instance.weight?.toString(),
     };
 
 BlockInfoShort _$BlockInfoShortFromJson(Map<String, dynamic> json) =>

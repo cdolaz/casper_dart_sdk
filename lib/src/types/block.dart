@@ -1,9 +1,12 @@
 import 'dart:core';
 
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+
 import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:casper_dart_sdk/src/types/signature.dart';
-import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+import 'package:casper_dart_sdk/src/types/validator_weight.dart';
 
 part 'generated/block.g.dart';
 
@@ -136,6 +139,7 @@ class BlockProof {
 class EraEnd {
   EraReport eraReport;
 
+  @ValidatorWeightJsonListConverter()
   List<ValidatorWeight> nextEraValidatorWeights;
 
   factory EraEnd.fromJson(Map<String, dynamic> json) => _$EraEndFromJson(json);
@@ -171,19 +175,6 @@ class Reward {
   Map<String, dynamic> toJson() => _$RewardToJson(this);
 
   Reward(this.amount, this.validator);
-}
-
-@JsonSerializable(fieldRename: FieldRename.snake)
-class ValidatorWeight {
-  @PublicKeyJsonConverter()
-  PublicKey validator;
-
-  BigInt? weight;
-
-  factory ValidatorWeight.fromJson(Map<String, dynamic> json) => _$ValidatorWeightFromJson(json);
-  Map<String, dynamic> toJson() => _$ValidatorWeightToJson(this);
-
-  ValidatorWeight(this.validator, this.weight);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

@@ -25,6 +25,7 @@ void main() {
     final node = CasperClient(Uri.parse(serverUrl));
 
     // TODO: Mocking client responses with ground truths could be better instead of relying on a test node.
+    // TODO: Some of the tests are specific to a particular test node. Mock the server and test against that.
 
     test("can get RPC schema", () async {
       final schema = await node.getRpcSchema();
@@ -131,6 +132,14 @@ void main() {
       expect(result.apiVersion, isNotEmpty);
       expect(result.eraSummary, isNotNull);
       expect(result.eraSummary!.blockHash, blockHash);
+    });
+
+    test("can get auction info", () async {
+      final blockHash = "a5ce9e1ea4ff786cf1eb9dfbe3a79f70ae33d723134a060910a2db80daf85bab";
+      final result = await node.getAuctionInfo(BlockId.fromHash(blockHash));
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.auctionState!.blockHeight, 569706);
     });
   });
 }

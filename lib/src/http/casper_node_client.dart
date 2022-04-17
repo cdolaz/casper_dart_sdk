@@ -1,6 +1,7 @@
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/constants.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
@@ -52,5 +53,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams params) async {
     return GetEraInfoBySwitchBlockResult.fromJson(await call(RpcMethodName.chainGetEraInfoBySwitchBlock, params.toJson()));
+  }
+
+  Future<GetAuctionInfoResult> getAuctionInfo(GetAuctionInfoParams params) async {
+    return GetAuctionInfoResult.fromJson(await call(RpcMethodName.stateGetAuctionInfo, params.toJson()));
   }
 }

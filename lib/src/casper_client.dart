@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
@@ -76,5 +77,9 @@ class CasperClient {
   /// For a non-switch block this method returns an empty response.
   Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock([BlockId? blockId]) async {
     return _nodeClient.getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams(blockId));
+  }
+
+  Future<GetAuctionInfoResult> getAuctionInfo([BlockId? blockId]) async {
+    return _nodeClient.getAuctionInfo(GetAuctionInfoParams(blockId));
   }
 }
