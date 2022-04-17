@@ -6,18 +6,6 @@ part of '../deploy.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DeployApproval _$DeployApprovalFromJson(Map<String, dynamic> json) =>
-    DeployApproval(
-      const SignatureJsonConverter().fromJson(json['signature'] as String),
-      const PublicKeyJsonConverter().fromJson(json['signer'] as String),
-    );
-
-Map<String, dynamic> _$DeployApprovalToJson(DeployApproval instance) =>
-    <String, dynamic>{
-      'signature': const SignatureJsonConverter().toJson(instance.signature),
-      'signer': const PublicKeyJsonConverter().toJson(instance.signer),
-    };
-
 Deploy _$DeployFromJson(Map<String, dynamic> json) => Deploy(
       const Cep57ChecksummedHexJsonConverter().fromJson(json['hash'] as String),
       DeployHeader.fromJson(json['header'] as Map<String, dynamic>),
@@ -62,4 +50,37 @@ Map<String, dynamic> _$DeployHeaderToJson(DeployHeader instance) =>
           const Cep57ChecksummedHexJsonConverter().toJson(instance.bodyHash),
       'dependencies': instance.dependencies,
       'chain_name': instance.chainName,
+    };
+
+DeployApproval _$DeployApprovalFromJson(Map<String, dynamic> json) =>
+    DeployApproval(
+      const SignatureJsonConverter().fromJson(json['signature'] as String),
+      const PublicKeyJsonConverter().fromJson(json['signer'] as String),
+    );
+
+Map<String, dynamic> _$DeployApprovalToJson(DeployApproval instance) =>
+    <String, dynamic>{
+      'signature': const SignatureJsonConverter().toJson(instance.signature),
+      'signer': const PublicKeyJsonConverter().toJson(instance.signer),
+    };
+
+DeployInfo _$DeployInfoFromJson(Map<String, dynamic> json) => DeployInfo(
+      json['deploy_hash'] as String,
+      const AccountHashKeyJsonConverter().fromJson(json['from'] as String),
+      BigInt.parse(json['gas'] as String),
+      const UrefJsonConverter().fromJson(json['source'] as String),
+      (json['transfers'] as List<dynamic>)
+          .map((e) => const TransferKeyJsonConverter().fromJson(e as String))
+          .toList(),
+    );
+
+Map<String, dynamic> _$DeployInfoToJson(DeployInfo instance) =>
+    <String, dynamic>{
+      'deploy_hash': instance.deployHash,
+      'from': const AccountHashKeyJsonConverter().toJson(instance.from),
+      'gas': instance.gas.toString(),
+      'source': const UrefJsonConverter().toJson(instance.source),
+      'transfers': instance.transfers
+          .map(const TransferKeyJsonConverter().toJson)
+          .toList(),
     };

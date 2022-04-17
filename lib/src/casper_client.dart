@@ -8,6 +8,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
 import 'package:casper_dart_sdk/src/types/block.dart';
 
 class CasperClient {
@@ -62,5 +63,11 @@ class CasperClient {
   Future<GetBalanceResult> getBalance(Uref purseUref, [String? stateRootHash]) async {
     stateRootHash ??= await getStateRootHash().then((result) => result.stateRootHash);
     return _nodeClient.getBalance(GetBalanceParams(purseUref, stateRootHash!));
+  }
+
+  /// Queries a global state and returns the stored value from the network
+  Future<QueryGlobalStateResult> queryGlobalState(String key, String hash, bool isBlockHash,
+      [List<String> path = const []]) async {
+    return _nodeClient.queryGlobalState(QueryGlobalStateParams.fromPair(key, hash, isBlockHash, path));
   }
 }

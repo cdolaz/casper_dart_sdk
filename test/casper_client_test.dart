@@ -114,6 +114,13 @@ void main() {
       Uref purse = Uref("uref-54fd72455872082a254b0160e94a86245acd0c441f526688bda1261d0969057a-007");
       final result = await node.getBalance(purse);
       expect(result, isNotNull);
-    }); 
+    });
+
+    test("can query a global state", () async {
+      final result = await node.queryGlobalState("transfer-9f5fe878c29fc3bf537c0509ec5abe1781a72bb6a3197a440e3e68247fba5909",
+         "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303", false);
+      expect(result, isNotNull);
+      expect(result.storedValue, isA<Transfer>());
+    });
   });
 }

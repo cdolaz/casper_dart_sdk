@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
+import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:convert/convert.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -21,9 +22,11 @@ abstract class GlobalStateKey {
   GlobalStateKey();
 
   GlobalStateKey.fromPrefixedKey(String key) {
-    final identifierStr = key.substring(0, key.lastIndexOf("-") + 1);
+    bool isUref = key.startsWith("uref-");
+    int indexOfSep = (isUref ? key.indexOf("-") : key.lastIndexOf('-'));
+    final identifierStr = key.substring(0, indexOfSep + 1);
     final keyIdentifier = KeyIdentifierExt.fromPrefix(identifierStr);
-    final headlessKey = key.substring(key.lastIndexOf("-") + 1);
+    final headlessKey = key.substring(indexOfSep + 1);
     final bytes = GlobalStateKey._verifyChecksum(headlessKey);
     this.key = keyIdentifier.prefix + Cep57Checksum.encode(bytes);
     this.keyIdentifier = keyIdentifier;
@@ -258,6 +261,44 @@ extension KeyIdentifierExt on KeyIdentifier {
 }
 
 // Json converters
+class GlobalStateKeyJsonConverter extends JsonConverter<GlobalStateKey, String> {
+  const GlobalStateKeyJsonConverter();
+
+  @override
+  GlobalStateKey fromJson(String json) {
+    final prefix = json.substring(0, json.indexOf("-") + 1);
+    final keyIdentifier = KeyIdentifierExt.fromPrefix(prefix);
+    final key = json.substring(json.indexOf("-") + 1);
+    switch (keyIdentifier) {
+      case KeyIdentifier.account:
+        return AccountHashKey(key);
+      case KeyIdentifier.hash:
+        return HashKey(key);
+      case KeyIdentifier.uref:
+        return Uref(json);
+      case KeyIdentifier.transfer:
+        return TransferKey(key);
+      case KeyIdentifier.deployInfo:
+        return DeployInfoKey(key);
+      case KeyIdentifier.eraInfo:
+        return EraInfoKey(key);
+      case KeyIdentifier.balance:
+        return BalanceKey(key);
+      case KeyIdentifier.bid:
+        return BidKey(key);
+      case KeyIdentifier.withdraw:
+        return WithdrawKey(key);
+      case KeyIdentifier.dictionary:
+        return DictionaryKey(key);
+    }
+  }
+
+  @override
+  String toJson(GlobalStateKey object) {
+    return object.key;
+  }
+}
+
 class AccountHashKeyJsonConverter extends JsonConverter<AccountHashKey, String> {
   const AccountHashKeyJsonConverter();
 
@@ -298,6 +339,12 @@ class UrefJsonConverter extends JsonConverter<Uref, String> {
   String toJson(Uref object) {
     return object.key;
   }
+
+  factory UrefJsonConverter.create() => UrefJsonConverter();
+}
+
+class UrefJsonListConverter extends JsonListConverter<Uref> {
+  const UrefJsonListConverter() : super(UrefJsonConverter.create);
 }
 
 class TransferKeyJsonConverter extends JsonConverter<TransferKey, String> {
@@ -312,6 +359,12 @@ class TransferKeyJsonConverter extends JsonConverter<TransferKey, String> {
   String toJson(TransferKey object) {
     return object.key;
   }
+
+  factory TransferKeyJsonConverter.create() => TransferKeyJsonConverter();
+}
+
+class TransferKeyJsonListConverter extends JsonListConverter<Uref> {
+  const TransferKeyJsonListConverter() : super(TransferKeyJsonConverter.create);
 }
 
 class DeployInfoKeyJsonConverter extends JsonConverter<DeployInfoKey, String> {

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:casper_dart_sdk/src/types/public_key.dart';
 import 'package:casper_dart_sdk/src/types/signature.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -9,21 +10,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'executable_deploy_item.dart';
 
 part 'generated/deploy.g.dart';
-
-@JsonSerializable(fieldRename: FieldRename.snake)
-class DeployApproval {
-  @SignatureJsonConverter()
-  Signature signature;
-
-  @PublicKeyJsonConverter()
-  PublicKey signer;
-
-  factory DeployApproval.fromJson(Map<String, dynamic> json) => _$DeployApprovalFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DeployApprovalToJson(this);
-
-  DeployApproval(this.signature, this.signer);
-}
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Deploy {
@@ -73,6 +59,21 @@ class DeployHeader {
   DeployHeader(this.account, this.timestamp, this.ttl, this.gasPrice, this.bodyHash, this.dependencies, this.chainName);
 }
 
+@JsonSerializable(fieldRename: FieldRename.snake)
+class DeployApproval {
+  @SignatureJsonConverter()
+  Signature signature;
+
+  @PublicKeyJsonConverter()
+  PublicKey signer;
+
+  factory DeployApproval.fromJson(Map<String, dynamic> json) => _$DeployApprovalFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DeployApprovalToJson(this);
+
+  DeployApproval(this.signature, this.signer);
+}
+
 class TimeToLiveJsonConverter implements JsonConverter<int, String> {
   const TimeToLiveJsonConverter();
 
@@ -85,4 +86,25 @@ class TimeToLiveJsonConverter implements JsonConverter<int, String> {
   String toJson(int value) {
     return value.toString();
   }
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class DeployInfo {
+  String deployHash;
+
+  @AccountHashKeyJsonConverter()
+  AccountHashKey from;
+
+  BigInt gas;
+
+  @UrefJsonConverter()
+  Uref source;
+
+  @TransferKeyJsonConverter()
+  List<TransferKey> transfers;
+
+  factory DeployInfo.fromJson(Map<String, dynamic> json) => _$DeployInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$DeployInfoToJson(this);
+
+  DeployInfo(this.deployHash, this.from, this.gas, this.source, this.transfers);
 }
