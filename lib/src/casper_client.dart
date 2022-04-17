@@ -5,6 +5,7 @@ import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
@@ -69,5 +70,11 @@ class CasperClient {
   Future<QueryGlobalStateResult> queryGlobalState(String key, String hash, bool isBlockHash,
       [List<String> path = const []]) async {
     return _nodeClient.queryGlobalState(QueryGlobalStateParams.fromPair(key, hash, isBlockHash, path));
+  }
+
+  /// Requests an [EraInfo] from the network given a switch block.
+  /// For a non-switch block this method returns an empty response.
+  Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock([BlockId? blockId]) async {
+    return _nodeClient.getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams(blockId));
   }
 }

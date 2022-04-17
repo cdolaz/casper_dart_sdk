@@ -4,6 +4,7 @@ import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
@@ -47,5 +48,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<QueryGlobalStateResult> queryGlobalState(QueryGlobalStateParams params) async {
     return QueryGlobalStateResult.fromJson(await call(RpcMethodName.queryGlobalState, params.toJson()));
+  }
+
+  Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams params) async {
+    return GetEraInfoBySwitchBlockResult.fromJson(await call(RpcMethodName.chainGetEraInfoBySwitchBlock, params.toJson()));
   }
 }

@@ -10,6 +10,7 @@ class RpcMethodName {
   static const String chainGetStateRootHash = "chain_get_state_root_hash";
   static const String chainGetBlock = "chain_get_block";
   static const String chainGetBlockTransfers = "chain_get_block_transfers";
+  static const String chainGetEraInfoBySwitchBlock = "chain_get_era_info_by_switch_block";
 
   // State
   static const String stateGetBalance = "state_get_balance";

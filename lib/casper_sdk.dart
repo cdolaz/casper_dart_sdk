@@ -8,19 +8,28 @@ export 'src/jsonrpc/get_status.dart' show GetStatusResult;
 export 'src/jsonrpc/get_block.dart' show GetBlockResult;
 export 'src/jsonrpc/get_balance.dart' show GetBalanceResult;
 export 'src/jsonrpc/get_block_transfers.dart' show GetBlockTransfersResult;
+export 'src/jsonrpc/query_global_state.dart' show QueryGlobalStateResult;
+export 'src/jsonrpc/get_era_info_by_switch_block.dart' show GetEraInfoBySwitchBlockResult;
 
 // Casper types
 export 'src/types/block.dart';
-export 'src/types/cl_type.dart' hide ClTypeDescriptorJsonConverter;
-export 'src/types/cl_value.dart' show ClValue;
-export 'src/types/deploy.dart' show Deploy, DeployHeader, DeployApproval;
-export 'src/types/executable_deploy_item.dart' hide NamedArgsJsonConverter, ExecutableDeployItemJsonConverter;
+export 'src/types/cl_type.dart';
+export 'src/types/cl_value.dart';
+export 'src/types/deploy.dart';
+export 'src/types/executable_deploy_item.dart';
 export 'src/types/key_algorithm.dart';
-export 'src/types/named_arg.dart' show NamedArg;
-export 'src/types/peer.dart' show Peer;
-export 'src/types/public_key.dart' show PublicKey;
-export 'src/types/signature.dart' show Signature;
-export 'src/types/transfer.dart' show Transfer;
-export 'src/types/global_state_key.dart' show GlobalStateKey, AccountHashKey, HashKey,
-  Uref, AccessRights, AccessRightsExt, TransferKey, DeployInfoKey,
-  EraInfoKey, BalanceKey, BidKey, WithdrawKey, DictionaryKey;
+export 'src/types/named_arg.dart';
+export 'src/types/peer.dart';
+export 'src/types/public_key.dart';
+export 'src/types/signature.dart';
+export 'src/types/transfer.dart';
+export 'src/types/global_state_key.dart';
+export 'src/types/account.dart';
+export 'src/types/bid.dart';
+export 'src/types/era.dart';
+export 'src/types/named_key.dart';
+export 'src/types/transfer.dart';
+export 'src/types/stored_value.dart';
+export 'src/types/unbonding_purse.dart';
+export 'src/types/delegator.dart';
+export 'src/types/contract.dart';

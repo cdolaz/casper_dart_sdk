@@ -1,8 +1,10 @@
 
-import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
+
 import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/stored_value.dart';
 
 part 'generated/era.g.dart';
 
@@ -15,6 +17,26 @@ class EraInfo {
   Map<String, dynamic> toJson() => _$EraInfoToJson(this);
 
   EraInfo(this.seigniorageAllocations);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class EraSummary {
+  String blockHash;
+  int eraId;
+
+  @StoredValueJsonConverter()
+  dynamic storedValue;
+
+  String stateRootHash;
+
+  String merkleProof;
+
+  factory EraSummary.fromJson(Map<String, dynamic> json) =>
+      _$EraSummaryFromJson(json);
+  Map<String, dynamic> toJson() => _$EraSummaryToJson(this);
+
+  EraSummary(this.blockHash, this.eraId, this.storedValue, this.stateRootHash,
+      this.merkleProof);
 }
 
 class SeigniorageAllocation {
@@ -37,11 +59,6 @@ class SeigniorageAllocationJsonConverter extends JsonConverter<SeigniorageAlloca
     final String top = json.keys.first;
     Map<String, dynamic> inner = json[top];
     final bool isDelegator = (top.toLowerCase() == "delegator");
-    if (isDelegator) {
-      inner = inner["Delegator"];
-    } else {
-      inner = inner["Validator"];
-    }
     PublicKey? delegatorPublicKey;
     PublicKey? validatorPublicKey;
     if (inner.containsKey("delegator_public_key")) {
