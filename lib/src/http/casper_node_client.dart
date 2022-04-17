@@ -10,6 +10,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
 
 class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
@@ -57,5 +58,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<GetAuctionInfoResult> getAuctionInfo(GetAuctionInfoParams params) async {
     return GetAuctionInfoResult.fromJson(await call(RpcMethodName.stateGetAuctionInfo, params.toJson()));
+  }
+
+  Future<PutDeployResult> putDeploy(PutDeployParams params) async {
+    return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, params.toJson()));
   }
 }

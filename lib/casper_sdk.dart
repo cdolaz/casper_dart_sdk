@@ -10,6 +10,7 @@ export 'src/jsonrpc/get_balance.dart' show GetBalanceResult;
 export 'src/jsonrpc/get_block_transfers.dart' show GetBlockTransfersResult;
 export 'src/jsonrpc/query_global_state.dart' show QueryGlobalStateResult;
 export 'src/jsonrpc/get_era_info_by_switch_block.dart' show GetEraInfoBySwitchBlockResult;
+export 'src/jsonrpc/get_auction_info.dart' show GetAuctionInfoResult;
 
 // Casper types
 export 'src/types/block.dart';

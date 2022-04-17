@@ -10,6 +10,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
 import 'package:casper_dart_sdk/src/types/block.dart';
 
@@ -79,7 +80,17 @@ class CasperClient {
     return _nodeClient.getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams(blockId));
   }
 
+  /// Requests the bids and validators at a given block.
   Future<GetAuctionInfoResult> getAuctionInfo([BlockId? blockId]) async {
     return _nodeClient.getAuctionInfo(GetAuctionInfoParams(blockId));
+  }
+
+  /// Sends a [Deploy] to the network to be executed.
+  /// [PutDeployResult] contains the hash of the deploy.
+  Future<PutDeployResult> putDeploy(Deploy deploy) async {
+    if (deploy.approvals.isEmpty) {
+      throw ArgumentError('Deploy must be signed before sending to the network');
+    }
+    return _nodeClient.putDeploy(PutDeployParams(deploy));
   }
 }

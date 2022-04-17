@@ -47,7 +47,7 @@ dart pub get
 
 To auto-generate serialization-deserialization classes, run build runner:
 ```
-dart pub run build_runner build
+dart run build_runner build
 ```
 
 ## Testing
