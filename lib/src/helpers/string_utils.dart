@@ -45,7 +45,6 @@ class DateTimeJsonConverter implements JsonConverter<DateTime, String> {
   }
 }
 
-
 class HumanReadableDurationJsonConverter implements JsonConverter<Duration, String> {
   const HumanReadableDurationJsonConverter();
 

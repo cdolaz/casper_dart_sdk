@@ -15,6 +15,7 @@ dev_dependencies:
   source_gen: ^1.2.1
 
 dependencies:
+  buffer: ^1.1.1
   convert: ^3.0.1
   http: ^0.13.4
   json_annotation: ^4.4.0

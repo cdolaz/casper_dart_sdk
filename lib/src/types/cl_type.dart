@@ -1,5 +1,8 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'dart:typed_data';
 
+import 'package:buffer/buffer.dart';
+import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 
 enum ClType {
@@ -24,72 +27,145 @@ enum ClType {
   tuple1,
   tuple2,
   tuple3,
-  publicKey,
-  any
+  any,
+  publicKey
 }
 
-class ClTypeDescriptor {
+class ClTypeDescriptor implements ByteSerializable {
   final ClType type;
   ClTypeDescriptor(this.type);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.writeUint8(type.index);
+    return mem.toBytes();
+  }
 }
 
 class ClOptionTypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor optionType;
   ClOptionTypeDescriptor(this.optionType) : super(ClType.option);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(optionType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClListTypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor listType;
   ClListTypeDescriptor(this.listType) : super(ClType.list);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(listType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClByteArrayTypeDescriptor extends ClTypeDescriptor {
   final int length;
   ClByteArrayTypeDescriptor(this.length) : super(ClType.byteArray);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.writeInt32(length);
+    return mem.toBytes();
+  }
 }
 
 class ClResultTypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor okType;
   final ClTypeDescriptor errType;
   ClResultTypeDescriptor(this.okType, this.errType) : super(ClType.result);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(okType.toBytes());
+    mem.write(errType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClMapTypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor keyType;
   final ClTypeDescriptor valueType;
   ClMapTypeDescriptor(this.keyType, this.valueType) : super(ClType.map);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(keyType.toBytes());
+    mem.write(valueType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClTuple1TypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor firstType;
   ClTuple1TypeDescriptor(this.firstType) : super(ClType.tuple1);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(firstType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClTuple2TypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor firstType;
   final ClTypeDescriptor secondType;
-  ClTuple2TypeDescriptor(this.firstType, this.secondType)
-      : super(ClType.tuple2);
+  ClTuple2TypeDescriptor(this.firstType, this.secondType) : super(ClType.tuple2);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(firstType.toBytes());
+    mem.write(secondType.toBytes());
+    return mem.toBytes();
+  }
 }
 
 class ClTuple3TypeDescriptor extends ClTypeDescriptor {
   final ClTypeDescriptor firstType;
   final ClTypeDescriptor secondType;
   final ClTypeDescriptor thirdType;
-  ClTuple3TypeDescriptor(this.firstType, this.secondType, this.thirdType)
-      : super(ClType.tuple3);
+  ClTuple3TypeDescriptor(this.firstType, this.secondType, this.thirdType) : super(ClType.tuple3);
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter();
+    mem.write(super.toBytes());
+    mem.write(firstType.toBytes());
+    mem.write(secondType.toBytes());
+    mem.write(thirdType.toBytes());
+    return mem.toBytes();
+  }
 }
 
-class ClTypeDescriptorJsonConverter
-    implements JsonConverter<ClTypeDescriptor, dynamic> {
+class ClTypeDescriptorJsonConverter implements JsonConverter<ClTypeDescriptor, dynamic> {
   const ClTypeDescriptorJsonConverter();
 
   @override
   ClTypeDescriptor fromJson(dynamic json) {
     // If json is string, convert it to ClType
     if (json is String) {
-      return ClTypeDescriptor(ClType.values.firstWhere((type) =>
-          type.toString().toLowerCase() == "cltype." + json.toLowerCase()));
+      return ClTypeDescriptor(
+          ClType.values.firstWhere((type) => type.toString().toLowerCase() == "cltype." + json.toLowerCase()));
     } else if (json is Map<String, dynamic>) {
       if (json.containsKey('Option')) {
         return ClOptionTypeDescriptor(fromJson(json['Option']));
@@ -99,12 +175,10 @@ class ClTypeDescriptorJsonConverter
         return ClByteArrayTypeDescriptor(json['ByteArray']);
       } else if (json.containsKey('Result')) {
         final result = json['Result'];
-        return ClResultTypeDescriptor(
-            fromJson(result['ok']), fromJson(result['err']));
+        return ClResultTypeDescriptor(fromJson(result['ok']), fromJson(result['err']));
       } else if (json.containsKey('Map')) {
         final map = json['Map'];
-        return ClMapTypeDescriptor(
-            fromJson(map['key']), fromJson(map['value']));
+        return ClMapTypeDescriptor(fromJson(map['key']), fromJson(map['value']));
       } else if (json.containsKey('Tuple1')) {
         return ClTuple1TypeDescriptor(fromJson(json['Tuple1'][0]));
       } else if (json.containsKey('Tuple2')) {
@@ -112,8 +186,7 @@ class ClTypeDescriptorJsonConverter
         return ClTuple2TypeDescriptor(fromJson(tuple2[0]), fromJson(tuple2[1]));
       } else if (json.containsKey('Tuple3')) {
         final tuple3 = json['Tuple3'];
-        return ClTuple3TypeDescriptor(
-            fromJson(tuple3[0]), fromJson(tuple3[1]), fromJson(tuple3[2]));
+        return ClTuple3TypeDescriptor(fromJson(tuple3[0]), fromJson(tuple3[1]), fromJson(tuple3[2]));
       } else {
         throw Exception('Unknown type $json');
       }
@@ -148,11 +221,7 @@ class ClTypeDescriptorJsonConverter
       };
     } else if (value is ClTuple3TypeDescriptor) {
       return {
-        'Tuple3': [
-          toJson(value.firstType),
-          toJson(value.secondType),
-          toJson(value.thirdType)
-        ]
+        'Tuple3': [toJson(value.firstType), toJson(value.secondType), toJson(value.thirdType)]
       };
     } else {
       return capitalizeFirstLetter(value.type.toString().split('.').last);

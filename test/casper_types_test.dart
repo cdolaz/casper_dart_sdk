@@ -44,7 +44,7 @@ void testExecutableDeployItemSerde() {
 
     expect(moduleBytesDeployItem.args.length, 1);
     expect(moduleBytesDeployItem.args[0].name, 'amount');
-    String hexStr = hex.encode(moduleBytesDeployItem.args[0].value.bytesAsUint8List);
+    String hexStr = hex.encode(moduleBytesDeployItem.args[0].value.bytes);
     expect(hexStr, '0400e1f505');
     expect(moduleBytesDeployItem.args[0].value.parsed, '100000000');
     expect(moduleBytesDeployItem.args[0].value.clTypeDescriptor.type, ClType.u512);

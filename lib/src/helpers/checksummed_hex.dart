@@ -90,3 +90,21 @@ class Cep57ChecksummedHexJsonConverter extends JsonConverter<String, String> {
     return object;
   }
 }
+
+class HexBytesWithCep57ChecksumConverter implements JsonConverter<Uint8List, String> {
+  const HexBytesWithCep57ChecksumConverter();
+
+  @override
+  Uint8List fromJson(String json) {
+    final result = Cep57Checksum.decode(json);
+    if (result.item1 == Cep57ChecksumResult.invalid) {
+      throw ArgumentError('Invalid checksum in hex string: $json');
+    }
+    return result.item2;
+  }
+
+  @override
+  String toJson(Uint8List object) {
+    return Cep57Checksum.encode(object);
+  }
+}

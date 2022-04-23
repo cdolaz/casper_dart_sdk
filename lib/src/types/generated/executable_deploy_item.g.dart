@@ -10,30 +10,16 @@ ModuleBytesDeployItem _$ModuleBytesDeployItemFromJson(
         Map<String, dynamic> json) =>
     ModuleBytesDeployItem(
       const NamedArgsJsonConverter().fromJson(json['args'] as List),
-      json['module_bytes'] as String,
+      const NullableHexStringBytesJsonConverter()
+          .fromJson(json['module_bytes'] as String?),
     );
 
 Map<String, dynamic> _$ModuleBytesDeployItemToJson(
         ModuleBytesDeployItem instance) =>
     <String, dynamic>{
       'args': const NamedArgsJsonConverter().toJson(instance.args),
-      'module_bytes': instance.moduleBytes,
-    };
-
-StoredContractByNameDeployItem _$StoredContractByNameDeployItemFromJson(
-        Map<String, dynamic> json) =>
-    StoredContractByNameDeployItem(
-      json['name'] as String,
-      json['entry_point'] as String,
-      const NamedArgsJsonConverter().fromJson(json['args'] as List),
-    );
-
-Map<String, dynamic> _$StoredContractByNameDeployItemToJson(
-        StoredContractByNameDeployItem instance) =>
-    <String, dynamic>{
-      'args': const NamedArgsJsonConverter().toJson(instance.args),
-      'name': instance.name,
-      'entry_point': instance.entryPoint,
+      'module_bytes': const NullableHexStringBytesJsonConverter()
+          .toJson(instance.moduleBytes),
     };
 
 StoredContractByHashDeployItem _$StoredContractByHashDeployItemFromJson(
@@ -49,6 +35,22 @@ Map<String, dynamic> _$StoredContractByHashDeployItemToJson(
     <String, dynamic>{
       'args': const NamedArgsJsonConverter().toJson(instance.args),
       'hash': instance.hash,
+      'entry_point': instance.entryPoint,
+    };
+
+StoredContractByNameDeployItem _$StoredContractByNameDeployItemFromJson(
+        Map<String, dynamic> json) =>
+    StoredContractByNameDeployItem(
+      json['name'] as String,
+      json['entry_point'] as String,
+      const NamedArgsJsonConverter().fromJson(json['args'] as List),
+    );
+
+Map<String, dynamic> _$StoredContractByNameDeployItemToJson(
+        StoredContractByNameDeployItem instance) =>
+    <String, dynamic>{
+      'args': const NamedArgsJsonConverter().toJson(instance.args),
+      'name': instance.name,
       'entry_point': instance.entryPoint,
     };
 

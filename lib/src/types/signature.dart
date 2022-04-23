@@ -10,7 +10,7 @@ import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
 /// Cryptographic signature of a data.
 class Signature {
   /// Byte array of the signature without the key algorithm identifier.
-  Uint8List bytes;
+  Uint8List headlessBytes;
 
   /// The key algorithm used to generate the signature.
   KeyAlgorithm keyAlgorithm;
@@ -43,19 +43,19 @@ class Signature {
   }
 
   /// Returns a byte array that includes the key algorithm identifier byte as the first byte.
-  Uint8List get bytesWithAlgorithmIdentifier {
+  Uint8List get bytes {
     // Set signature algorithm identifier
-    final buffer = Uint8List(bytes.lengthInBytes + 1);
+    final buffer = Uint8List(headlessBytes.lengthInBytes + 1);
     buffer[0] = keyAlgorithm.value;
     // Copy signature bytes
-    buffer.setRange(1, buffer.length, bytes);
+    buffer.setRange(1, buffer.length, headlessBytes);
     return buffer;
   }
 
   /// Returns a hexadecimal string representation of the signature that includes
   /// the key algorithm identifier byte as the first two chars.
   String toHex() {
-    return keyAlgorithm.identifierByteHex + Cep57Checksum.encode(bytes);
+    return keyAlgorithm.identifierByteHex + Cep57Checksum.encode(headlessBytes);
   }
 
   @override
@@ -63,7 +63,7 @@ class Signature {
     return toHex();
   }
 
-  Signature(this.bytes, this.keyAlgorithm);
+  Signature(this.headlessBytes, this.keyAlgorithm);
 }
 
 class SignatureJsonConverter extends JsonConverter<Signature, String> {

@@ -12,7 +12,7 @@ import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
 class PublicKey {
   /// Byte array of the public key without the key algorithm identifier.
-  Uint8List bytes;
+  Uint8List headlessBytes;
 
   /// The key algorithm used to generate the public key.
   KeyAlgorithm keyAlgorithm;
@@ -39,16 +39,16 @@ class PublicKey {
     return PublicKey(bytes, algorithm);
   }
 
-  Uint8List get bytesWithIdentifier {
-    final Uint8List bytes = Uint8List(this.bytes.length + 1);
+  Uint8List get bytes {
+    final Uint8List bytes = Uint8List(this.headlessBytes.length + 1);
     bytes[0] = keyAlgorithm.identifierByte;
-    bytes.setAll(1, this.bytes);
+    bytes.setAll(1, this.headlessBytes);
     return bytes;
   }
 
   // TODO: Signature verification
 
-  String get accountHex => keyAlgorithm.identifierByteHex + Cep57Checksum.encode(bytes);
+  String get accountHex => keyAlgorithm.identifierByteHex + Cep57Checksum.encode(headlessBytes);
 
   /// Returns prefixed account hash key
   String get accountHash {
@@ -57,7 +57,7 @@ class PublicKey {
     final algoNameBytes = Uint8List.fromList(utf8.encode(algoName));
     blake2.update(algoNameBytes, 0, algoNameBytes.length);
     blake2.update(Uint8List.fromList([0]), 0, 1);
-    blake2.update(bytes, 0, bytes.length);
+    blake2.update(headlessBytes, 0, headlessBytes.length);
     Uint8List hash = Uint8List(32);
     blake2.doFinal(hash, 0);
     return "account-hash-" + Cep57Checksum.encode(hash);
@@ -68,7 +68,7 @@ class PublicKey {
     return accountHex;
   }
 
-  PublicKey(this.bytes, this.keyAlgorithm);
+  PublicKey(this.headlessBytes, this.keyAlgorithm);
 }
 
 class PublicKeyJsonConverter implements JsonConverter<PublicKey, String> {
