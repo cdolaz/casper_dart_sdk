@@ -19,7 +19,7 @@ class NamedArg implements ByteSerializable {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     List<int> nameBytes = utf8.encode(name);
     mem.writeInt32(nameBytes.length);
     mem.write(nameBytes);

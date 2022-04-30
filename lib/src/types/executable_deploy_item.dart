@@ -4,7 +4,9 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:casper_dart_sdk/src/types/cl_value.dart';
+import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
 import 'package:casper_dart_sdk/src/types/named_arg.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
@@ -17,27 +19,27 @@ part 'generated/executable_deploy_item.g.dart';
 abstract class ExecutableDeployItem implements ByteSerializable {
   @JsonKey(name: 'args')
   @NamedArgsJsonConverter()
-  List<NamedArg> args;
-
-  ExecutableDeployItem(this.args);
-
+  late List<NamedArg> args;
   int get tag;
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeInt32(args.length);
     for (NamedArg arg in args) {
       mem.write(arg.toBytes());
     }
     return mem.toBytes();
   }
+
+  ExecutableDeployItem.withArgs(this.args);
+  ExecutableDeployItem();
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ModuleBytesDeployItem extends ExecutableDeployItem {
   @NullableHexStringBytesJsonConverter()
-  Uint8List? moduleBytes;
+  late Uint8List? moduleBytes;
 
   factory ModuleBytesDeployItem.fromJson(Map<String, dynamic> json) => _$ModuleBytesDeployItemFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleBytesDeployItemToJson(this);
@@ -47,7 +49,7 @@ class ModuleBytesDeployItem extends ExecutableDeployItem {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     if (moduleBytes == null || moduleBytes!.isEmpty) {
       mem.writeInt32(0);
@@ -60,7 +62,11 @@ class ModuleBytesDeployItem extends ExecutableDeployItem {
     return mem.toBytes();
   }
 
-  ModuleBytesDeployItem(List<NamedArg> args, this.moduleBytes) : super(args);
+  ModuleBytesDeployItem.fromAmount(BigInt amount) : super.withArgs([NamedArg('amount', ClValue.u512(amount))]) {
+    moduleBytes = Uint8List.fromList([]);
+  }
+
+  ModuleBytesDeployItem() : super();
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -79,7 +85,7 @@ class StoredContractByHashDeployItem extends ExecutableDeployItem {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     mem.write(hex.decode(hash));
     List<int> entryPointBytes = utf8.encode(entryPoint);
@@ -90,7 +96,7 @@ class StoredContractByHashDeployItem extends ExecutableDeployItem {
     return mem.toBytes();
   }
 
-  StoredContractByHashDeployItem(this.hash, this.entryPoint, List<NamedArg> args) : super(args);
+  StoredContractByHashDeployItem(this.hash, this.entryPoint, [List<NamedArg> args = const []]) : super.withArgs(args);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -103,24 +109,25 @@ class StoredContractByNameDeployItem extends ExecutableDeployItem {
       _$StoredContractByNameDeployItemFromJson(json);
   Map<String, dynamic> toJson() => _$StoredContractByNameDeployItemToJson(this);
 
-  StoredContractByNameDeployItem(this.name, this.entryPoint, List<NamedArg> args) : super(args);
-
   @override
   int get tag => 0x02;
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     List<int> nameBytes = utf8.encode(name);
     mem.writeInt32(nameBytes.length);
     mem.write(nameBytes);
     List<int> entryPointBytes = utf8.encode(entryPoint);
     mem.writeInt32(entryPointBytes.length);
+    mem.write(entryPointBytes);
     Uint8List argsBytes = super.toBytes();
     mem.write(argsBytes);
     return mem.toBytes();
   }
+
+  StoredContractByNameDeployItem(this.name, this.entryPoint, [List<NamedArg> args = const []]) : super.withArgs(args);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -141,7 +148,7 @@ class StoredVersionedContractByHashDeployItem extends ExecutableDeployItem {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     mem.write(hex.decode(hash));
     if (version == null) {
@@ -158,7 +165,8 @@ class StoredVersionedContractByHashDeployItem extends ExecutableDeployItem {
     return mem.toBytes();
   }
 
-  StoredVersionedContractByHashDeployItem(this.hash, this.version, this.entryPoint, List<NamedArg> args) : super(args);
+  StoredVersionedContractByHashDeployItem(this.hash, this.version, this.entryPoint, [List<NamedArg> args = const []])
+      : super.withArgs(args);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -178,7 +186,7 @@ class StoredVersionedContractByNameDeployItem extends ExecutableDeployItem {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     List<int> nameBytes = utf8.encode(name);
     mem.writeInt32(nameBytes.length);
@@ -197,7 +205,8 @@ class StoredVersionedContractByNameDeployItem extends ExecutableDeployItem {
     return mem.toBytes();
   }
 
-  StoredVersionedContractByNameDeployItem(this.name, this.version, this.entryPoint, List<NamedArg> args) : super(args);
+  StoredVersionedContractByNameDeployItem(this.name, this.version, this.entryPoint, [List<NamedArg> args = const []])
+      : super.withArgs(args);
 }
 
 @JsonSerializable()
@@ -210,14 +219,30 @@ class TransferDeployItem extends ExecutableDeployItem {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(tag);
     Uint8List argsBytes = super.toBytes();
     mem.write(argsBytes);
     return mem.toBytes();
   }
 
-  TransferDeployItem(List<NamedArg> args) : super(args);
+  TransferDeployItem.transfer(BigInt amount, AccountHashKey targetAccount, [int? id]) : super() {
+    args = [
+      NamedArg(
+        'amount',
+        ClValue.u512(amount),
+      ),
+      NamedArg(
+        'target',
+        ClValue.byteArray(targetAccount.headlessBytes),
+      ),
+      NamedArg(
+        'id',
+        id == null ? ClValue.optionNone(ClTypeDescriptor(ClType.u64)) : ClValue.option(ClValue.u64(id)),
+      ),
+    ];
+  }
+  TransferDeployItem() : super();
 }
 
 class NamedArgsJsonConverter extends JsonConverter<List<NamedArg>, List<dynamic>> {

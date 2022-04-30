@@ -1,12 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:buffer/buffer.dart';
 import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
+import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
 import 'package:convert/convert.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-abstract class GlobalStateKey {
+abstract class GlobalStateKey implements ByteSerializable {
   /// The key prefixed with key identifier string.
   late final String key;
 
@@ -55,6 +57,18 @@ abstract class GlobalStateKey {
     }
     return bytes;
   }
+
+  String toHex() {
+    return Cep57Checksum.encode(headlessBytes);
+  }
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
+    mem.writeUint8(keyIdentifier.index);
+    mem.write(headlessBytes);
+    return mem.toBytes();
+  }
 }
 
 class AccountHashKey extends GlobalStateKey {
@@ -77,24 +91,41 @@ class HashKey extends GlobalStateKey {
 class Uref extends GlobalStateKey {
   late AccessRights accessRights;
 
-  /// Value contains key prefix and a access rights suffix.
+  /// Bytes of the key without the key identifier byte and the access rights byte
+  @override
+  Uint8List get headlessBytes {
+    final headless = key.substring(key.indexOf("-") + 1, key.lastIndexOf("-")).toLowerCase();
+    return Uint8List.fromList(hex.decode(headless));
+  }
+
+  /// Creates a Uref object with a hex string that contains an access rights suffix.
+  /// The hex string [value] can be prefixed with "uref-" or not.
   Uref(String value) {
-    if (!value.startsWith(KeyIdentifier.uref.prefix)) {
-      throw ArgumentError.value(value, 'value', 'Uref key must start with "${KeyIdentifier.uref.prefix}"');
-    }
+    bool isPrefixed = value.startsWith(KeyIdentifier.uref.prefix);
+    int partCount = (isPrefixed ? 3 : 2);
     final parts = value.split("-");
-    if (parts.length != 3) {
-      throw ArgumentError.value(value, 'value', 'Uref key must contain 3 parts, separated by "-"');
+    if (parts.length != partCount) {
+      throw ArgumentError.value(
+          value, 'value', 'Uref key must contain 3 (or 2 if not prefixed) parts, separated by "-"');
     }
     keyIdentifier = KeyIdentifier.uref;
-    final key = parts[1];
-    final accessRightsStr = parts[2];
+    final key = parts[isPrefixed ? 1 : 0];
+    final accessRightsStr = parts[isPrefixed ? 2 : 1];
     if (key.length != 64) {
       throw ArgumentError.value(value, 'value', 'Uref key must contain 32 bytes');
     }
     final bytes = GlobalStateKey._verifyChecksum(key);
     this.key = keyIdentifier.prefix + Cep57Checksum.encode(bytes) + "-" + accessRightsStr;
     accessRights = AccessRightsExt.fromString(accessRightsStr);
+  }
+
+  @override
+  Uint8List toBytes() {
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
+    mem.writeUint8(keyIdentifier.index);
+    mem.write(headlessBytes);
+    mem.writeUint8(accessRights.index);
+    return mem.toBytes();
   }
 }
 
@@ -202,6 +233,31 @@ extension KeyIdentifierExt on KeyIdentifier {
         return "withdraw-";
       case KeyIdentifier.dictionary:
         return "dictionary-";
+    }
+  }
+
+  String get identifierName {
+    switch (this) {
+      case KeyIdentifier.account:
+        return "Account";
+      case KeyIdentifier.hash:
+        return "Hash";
+      case KeyIdentifier.uref:
+        return "URef";
+      case KeyIdentifier.transfer:
+        return "Transfer";
+      case KeyIdentifier.deployInfo:
+        return "DeployInfo";
+      case KeyIdentifier.eraInfo:
+        return "EraInfo";
+      case KeyIdentifier.balance:
+        return "Balance";
+      case KeyIdentifier.bid:
+        return "Bid";
+      case KeyIdentifier.withdraw:
+        return "Withdraw";
+      case KeyIdentifier.dictionary:
+        return "Dictionary";
     }
   }
 

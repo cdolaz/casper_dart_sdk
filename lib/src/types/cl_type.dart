@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 
@@ -31,16 +33,19 @@ enum ClType {
   publicKey
 }
 
-class ClTypeDescriptor implements ByteSerializable {
+class ClTypeDescriptor extends Equatable implements ByteSerializable {
   final ClType type;
   ClTypeDescriptor(this.type);
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.writeUint8(type.index);
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [type];
 }
 
 class ClOptionTypeDescriptor extends ClTypeDescriptor {
@@ -49,11 +54,14 @@ class ClOptionTypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(optionType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [optionType, ...super.props];
 }
 
 class ClListTypeDescriptor extends ClTypeDescriptor {
@@ -62,11 +70,14 @@ class ClListTypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(listType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [listType, ...super.props];
 }
 
 class ClByteArrayTypeDescriptor extends ClTypeDescriptor {
@@ -75,11 +86,14 @@ class ClByteArrayTypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.writeInt32(length);
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [length, ...super.props];
 }
 
 class ClResultTypeDescriptor extends ClTypeDescriptor {
@@ -89,12 +103,15 @@ class ClResultTypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(okType.toBytes());
     mem.write(errType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [okType, errType, ...super.props];
 }
 
 class ClMapTypeDescriptor extends ClTypeDescriptor {
@@ -104,12 +121,15 @@ class ClMapTypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(keyType.toBytes());
     mem.write(valueType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [keyType, valueType, ...super.props];
 }
 
 class ClTuple1TypeDescriptor extends ClTypeDescriptor {
@@ -118,11 +138,14 @@ class ClTuple1TypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(firstType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [firstType, ...super.props];
 }
 
 class ClTuple2TypeDescriptor extends ClTypeDescriptor {
@@ -132,12 +155,15 @@ class ClTuple2TypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(firstType.toBytes());
     mem.write(secondType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [firstType, secondType, ...super.props];
 }
 
 class ClTuple3TypeDescriptor extends ClTypeDescriptor {
@@ -148,13 +174,16 @@ class ClTuple3TypeDescriptor extends ClTypeDescriptor {
 
   @override
   Uint8List toBytes() {
-    ByteDataWriter mem = ByteDataWriter();
+    ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(super.toBytes());
     mem.write(firstType.toBytes());
     mem.write(secondType.toBytes());
     mem.write(thirdType.toBytes());
     return mem.toBytes();
   }
+
+  @override
+  List<Object?> get props => [firstType, secondType, thirdType, ...super.props];
 }
 
 class ClTypeDescriptorJsonConverter implements JsonConverter<ClTypeDescriptor, dynamic> {

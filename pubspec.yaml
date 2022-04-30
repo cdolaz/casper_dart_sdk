@@ -22,4 +22,5 @@ dependencies:
   jsonrpc2: ^3.0.1
   pointycastle: ^3.5.2
   tuple: ^2.0.0
+  equatable: ^2.0.0
 

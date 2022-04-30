@@ -39,10 +39,11 @@ class PublicKey {
     return PublicKey(bytes, algorithm);
   }
 
+  /// Byte array of the public key, including the key algorithm identifier as the first byte.
   Uint8List get bytes {
-    final Uint8List bytes = Uint8List(this.headlessBytes.length + 1);
+    final Uint8List bytes = Uint8List(headlessBytes.length + 1);
     bytes[0] = keyAlgorithm.identifierByte;
-    bytes.setAll(1, this.headlessBytes);
+    bytes.setAll(1, headlessBytes);
     return bytes;
   }
 

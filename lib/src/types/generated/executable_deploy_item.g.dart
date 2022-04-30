@@ -8,11 +8,10 @@ part of '../executable_deploy_item.dart';
 
 ModuleBytesDeployItem _$ModuleBytesDeployItemFromJson(
         Map<String, dynamic> json) =>
-    ModuleBytesDeployItem(
-      const NamedArgsJsonConverter().fromJson(json['args'] as List),
-      const NullableHexStringBytesJsonConverter()
-          .fromJson(json['module_bytes'] as String?),
-    );
+    ModuleBytesDeployItem()
+      ..args = const NamedArgsJsonConverter().fromJson(json['args'] as List)
+      ..moduleBytes = const NullableHexStringBytesJsonConverter()
+          .fromJson(json['module_bytes'] as String?);
 
 Map<String, dynamic> _$ModuleBytesDeployItemToJson(
         ModuleBytesDeployItem instance) =>
@@ -27,7 +26,9 @@ StoredContractByHashDeployItem _$StoredContractByHashDeployItemFromJson(
     StoredContractByHashDeployItem(
       json['hash'] as String,
       json['entry_point'] as String,
-      const NamedArgsJsonConverter().fromJson(json['args'] as List),
+      json['args'] == null
+          ? const []
+          : const NamedArgsJsonConverter().fromJson(json['args'] as List),
     );
 
 Map<String, dynamic> _$StoredContractByHashDeployItemToJson(
@@ -43,7 +44,9 @@ StoredContractByNameDeployItem _$StoredContractByNameDeployItemFromJson(
     StoredContractByNameDeployItem(
       json['name'] as String,
       json['entry_point'] as String,
-      const NamedArgsJsonConverter().fromJson(json['args'] as List),
+      json['args'] == null
+          ? const []
+          : const NamedArgsJsonConverter().fromJson(json['args'] as List),
     );
 
 Map<String, dynamic> _$StoredContractByNameDeployItemToJson(
@@ -61,7 +64,9 @@ StoredVersionedContractByHashDeployItem
           json['hash'] as String,
           json['version'] as int?,
           json['entry_point'] as String,
-          const NamedArgsJsonConverter().fromJson(json['args'] as List),
+          json['args'] == null
+              ? const []
+              : const NamedArgsJsonConverter().fromJson(json['args'] as List),
         );
 
 Map<String, dynamic> _$StoredVersionedContractByHashDeployItemToJson(
@@ -80,7 +85,9 @@ StoredVersionedContractByNameDeployItem
           json['name'] as String,
           json['version'] as int?,
           json['entry_point'] as String,
-          const NamedArgsJsonConverter().fromJson(json['args'] as List),
+          json['args'] == null
+              ? const []
+              : const NamedArgsJsonConverter().fromJson(json['args'] as List),
         );
 
 Map<String, dynamic> _$StoredVersionedContractByNameDeployItemToJson(
@@ -93,9 +100,8 @@ Map<String, dynamic> _$StoredVersionedContractByNameDeployItemToJson(
     };
 
 TransferDeployItem _$TransferDeployItemFromJson(Map<String, dynamic> json) =>
-    TransferDeployItem(
-      const NamedArgsJsonConverter().fromJson(json['args'] as List),
-    );
+    TransferDeployItem()
+      ..args = const NamedArgsJsonConverter().fromJson(json['args'] as List);
 
 Map<String, dynamic> _$TransferDeployItemToJson(TransferDeployItem instance) =>
     <String, dynamic>{
