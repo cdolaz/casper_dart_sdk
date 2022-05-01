@@ -10,7 +10,7 @@ class JsonRpcHttpServerProxy extends ServerProxyBase {
 
   JsonRpcHttpServerProxy(url, [this.additionalHeaders = const <String, String>{}]) : super(url);
 
-  /// Return a Future with the JSON-RPC response
+  /// Returns a Future with the JSON-RPC response
   @override
   Future<String> transmit(String package) async {
     var headers = {'Content-Type': 'application/json'};

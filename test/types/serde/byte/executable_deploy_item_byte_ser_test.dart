@@ -35,7 +35,7 @@ void main() {
     });
 
     test("A sample TransferDeployItem correctly serializes to bytes", () {
-      final publicKey = PublicKey.fromHex("01027c04a0210afdf4a83328d57e8c2a12247a86d872fb53367f22a84b1b53d2a9");
+      final publicKey = ClPublicKey.fromHex("01027c04a0210afdf4a83328d57e8c2a12247a86d872fb53367f22a84b1b53d2a9");
       final transfer = TransferDeployItem.transfer(BigInt.from(15000000000), AccountHashKey.fromPublicKey(publicKey), 12345);
       expect(hex.encode(transfer.toBytes()),
           "050300000006000000616d6f756e74060000000500d6117e03"

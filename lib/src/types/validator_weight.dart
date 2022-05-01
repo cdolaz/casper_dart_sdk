@@ -2,10 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 
-import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 
 class ValidatorWeight {
-  PublicKey publicKey;
+  ClPublicKey publicKey;
 
   BigInt? weight;
 
@@ -17,11 +17,11 @@ class ValidatorWeightJsonConverter implements JsonConverter<ValidatorWeight, Map
 
   @override
   ValidatorWeight fromJson(Map<String, dynamic> json) {
-    late PublicKey publicKey;
+    late ClPublicKey publicKey;
     if (json.containsKey("validator")) {
-      publicKey = PublicKeyJsonConverter().fromJson(json["validator"]);
+      publicKey = ClPublicKeyJsonConverter().fromJson(json["validator"]);
     } else if (json.containsKey("public_key")) {
-      publicKey = PublicKeyJsonConverter().fromJson(json["public_key"]);
+      publicKey = ClPublicKeyJsonConverter().fromJson(json["public_key"]);
     }
     return ValidatorWeight(
       publicKey,
@@ -32,7 +32,7 @@ class ValidatorWeightJsonConverter implements JsonConverter<ValidatorWeight, Map
   @override
   Map<String, dynamic> toJson(ValidatorWeight object) {
     return {
-      'public_key': PublicKeyJsonConverter().toJson(object.publicKey), // TODO: This field can also be 'validator'
+      'public_key': ClPublicKeyJsonConverter().toJson(object.publicKey), // TODO: This field can also be 'validator'
       'weight': object.weight?.toString(),
     };
   }

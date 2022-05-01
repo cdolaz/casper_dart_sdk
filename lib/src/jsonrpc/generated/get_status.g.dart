@@ -17,7 +17,7 @@ GetStatusResult _$GetStatusResultFromJson(Map<String, dynamic> json) =>
           : BlockInfoShort.fromJson(
               json['last_added_block_info'] as Map<String, dynamic>)
       ..nextUpgrade = json['next_upgrade'] as String?
-      ..ourPublicSigningKey = const PublicKeyJsonConverter()
+      ..ourPublicSigningKey = const ClPublicKeyJsonConverter()
           .fromJson(json['our_public_signing_key'] as String)
       ..peers = (json['peers'] as List<dynamic>)
           .map((e) => Peer.fromJson(e as Map<String, dynamic>))
@@ -35,7 +35,7 @@ Map<String, dynamic> _$GetStatusResultToJson(GetStatusResult instance) =>
       'last_added_block_info': instance.lastAddedBlockInfo,
       'next_upgrade': instance.nextUpgrade,
       'our_public_signing_key':
-          const PublicKeyJsonConverter().toJson(instance.ourPublicSigningKey),
+          const ClPublicKeyJsonConverter().toJson(instance.ourPublicSigningKey),
       'peers': instance.peers,
       'round_length': instance.roundLength,
       'starting_state_root_hash': instance.startingStateRootHash,

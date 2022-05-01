@@ -1,4 +1,4 @@
-import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
@@ -14,11 +14,11 @@ class UnbondingPurse {
 
   int eraOfCreation;
 
-  @PublicKeyJsonConverter()
-  PublicKey unbonderPublicKey;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey unbonderPublicKey;
 
-  @PublicKeyJsonConverter()
-  PublicKey validatorPublicKey;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey validatorPublicKey;
 
   factory UnbondingPurse.fromJson(Map<String, dynamic> json) =>
       _$UnbondingPurseFromJson(json);

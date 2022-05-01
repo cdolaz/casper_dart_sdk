@@ -314,7 +314,7 @@ void main() {
     });
 
     group("ClValue.publicKey", () {
-      final publicKey = PublicKey.fromHex("01381b36cd07Ad85348607ffE0fA3A2d033eA941D14763358eBEacE9C8aD3cB771");
+      final publicKey = ClPublicKey.fromHex("01381b36cd07Ad85348607ffE0fA3A2d033eA941D14763358eBEacE9C8aD3cB771");
       test("A sample ClValue.publicKey correctly serializes to bytes", () {
         final publicKeyValue = ClValue.publicKey(publicKey);
         final bytes = publicKeyValue.toBytes();

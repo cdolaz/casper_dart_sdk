@@ -209,10 +209,10 @@ class ClValue implements ByteSerializable {
     parsed = {key.keyIdentifier.identifierName: key.key};
   }
 
-  ClValue.publicKey(PublicKey key) {
-    bytes = key.bytes;
+  ClValue.publicKey(ClPublicKey key) {
+    bytes = key.bytesWithKeyAlgorithmIdentifier;
     clTypeDescriptor = ClTypeDescriptor(ClType.publicKey);
-    parsed = hex.encode(key.bytes);
+    parsed = hex.encode(key.bytesWithKeyAlgorithmIdentifier);
   }
 
   ClValue.map(Map<ClValue, ClValue> map) {

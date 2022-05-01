@@ -29,7 +29,7 @@ Map<String, dynamic> _$DeployToJson(Deploy instance) => <String, dynamic>{
     };
 
 DeployHeader _$DeployHeaderFromJson(Map<String, dynamic> json) => DeployHeader(
-      const PublicKeyJsonConverter().fromJson(json['account'] as String),
+      const ClPublicKeyJsonConverter().fromJson(json['account'] as String),
       const DateTimeJsonConverter().fromJson(json['timestamp'] as String),
       const HumanReadableDurationJsonConverter()
           .fromJson(json['ttl'] as String),
@@ -42,7 +42,7 @@ DeployHeader _$DeployHeaderFromJson(Map<String, dynamic> json) => DeployHeader(
 
 Map<String, dynamic> _$DeployHeaderToJson(DeployHeader instance) =>
     <String, dynamic>{
-      'account': const PublicKeyJsonConverter().toJson(instance.account),
+      'account': const ClPublicKeyJsonConverter().toJson(instance.account),
       'timestamp': const DateTimeJsonConverter().toJson(instance.timestamp),
       'ttl': const HumanReadableDurationJsonConverter().toJson(instance.ttl),
       'gas_price': instance.gasPrice,
@@ -55,13 +55,13 @@ Map<String, dynamic> _$DeployHeaderToJson(DeployHeader instance) =>
 DeployApproval _$DeployApprovalFromJson(Map<String, dynamic> json) =>
     DeployApproval(
       const SignatureJsonConverter().fromJson(json['signature'] as String),
-      const PublicKeyJsonConverter().fromJson(json['signer'] as String),
+      const ClPublicKeyJsonConverter().fromJson(json['signer'] as String),
     );
 
 Map<String, dynamic> _$DeployApprovalToJson(DeployApproval instance) =>
     <String, dynamic>{
       'signature': const SignatureJsonConverter().toJson(instance.signature),
-      'signer': const PublicKeyJsonConverter().toJson(instance.signer),
+      'signer': const ClPublicKeyJsonConverter().toJson(instance.signer),
     };
 
 DeployInfo _$DeployInfoFromJson(Map<String, dynamic> json) => DeployInfo(

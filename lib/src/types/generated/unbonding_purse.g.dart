@@ -11,9 +11,9 @@ UnbondingPurse _$UnbondingPurseFromJson(Map<String, dynamic> json) =>
       BigInt.parse(json['amount'] as String),
       const UrefJsonConverter().fromJson(json['bonding_purse'] as String),
       json['era_of_creation'] as int,
-      const PublicKeyJsonConverter()
+      const ClPublicKeyJsonConverter()
           .fromJson(json['unbonder_public_key'] as String),
-      const PublicKeyJsonConverter()
+      const ClPublicKeyJsonConverter()
           .fromJson(json['validator_public_key'] as String),
     );
 
@@ -23,7 +23,7 @@ Map<String, dynamic> _$UnbondingPurseToJson(UnbondingPurse instance) =>
       'bonding_purse': const UrefJsonConverter().toJson(instance.bondingPurse),
       'era_of_creation': instance.eraOfCreation,
       'unbonder_public_key':
-          const PublicKeyJsonConverter().toJson(instance.unbonderPublicKey),
+          const ClPublicKeyJsonConverter().toJson(instance.unbonderPublicKey),
       'validator_public_key':
-          const PublicKeyJsonConverter().toJson(instance.validatorPublicKey),
+          const ClPublicKeyJsonConverter().toJson(instance.validatorPublicKey),
     };

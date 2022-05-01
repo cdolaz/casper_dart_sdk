@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
 import 'package:casper_dart_sdk/src/types/peer.dart';
 import 'package:casper_dart_sdk/src/types/block.dart';
-import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 
 part 'generated/get_status.g.dart';
 
@@ -17,8 +17,8 @@ class GetStatusResult extends RpcResult {
 
   late String? nextUpgrade;
 
-  @PublicKeyJsonConverter()
-  late PublicKey ourPublicSigningKey;
+  @ClPublicKeyJsonConverter()
+  late ClPublicKey ourPublicSigningKey;
 
   late List<Peer> peers;
 

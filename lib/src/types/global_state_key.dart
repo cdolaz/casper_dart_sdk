@@ -74,7 +74,7 @@ abstract class GlobalStateKey implements ByteSerializable {
 class AccountHashKey extends GlobalStateKey {
   AccountHashKey(String key) : super.fromKey(KeyIdentifier.account, key);
   AccountHashKey.fromPrefixedKey(String key) : super.fromPrefixedKey(key);
-  AccountHashKey.fromPublicKey(PublicKey publicKey) : super.fromPrefixedKey(publicKey.accountHash);
+  AccountHashKey.fromPublicKey(ClPublicKey publicKey) : super.fromPrefixedKey(publicKey.accountHash);
   AccountHashKey.fromBytes(Uint8List bytes) : super.fromBytes(KeyIdentifier.account, bytes);
 }
 

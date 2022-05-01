@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:casper_dart_sdk/src/types/vesting_schedule.dart';
-import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 import 'package:casper_dart_sdk/src/types/delegator.dart';
 
 part 'generated/bid.g.dart';
@@ -21,8 +21,8 @@ class Bid {
 
   BigInt stakedAmount;
 
-  @PublicKeyNullableJsonConverter()
-  PublicKey? validatorPublicKey;
+  @ClPublicKeyNullableJsonConverter()
+  ClPublicKey? validatorPublicKey;
 
   VestingSchedule? vestingSchedule;
 
@@ -35,8 +35,8 @@ class Bid {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ValidatorBid {
-  @PublicKeyJsonConverter()
-  PublicKey publicKey;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey publicKey;
   Bid bid;
 
   factory ValidatorBid.fromJson(Map<String, dynamic> json) => _$ValidatorBidFromJson(json);

@@ -1,9 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
+import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
+import 'package:casper_dart_sdk/src/helpers/cryptography_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
+import 'package:convert/convert.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
@@ -94,6 +97,37 @@ void main() {
       String input = 'abcdef';
       String result = capitalizeFirstLetter(input);
       expect(result, equals('Abcdef'));
+    });
+  });
+
+  group("Cryptography utils", () {
+
+    group("Ed25519 signature verification", () {
+      test("A sample Ed25519 signed message's signature verified correctly", () async {
+        final signer = "01b7c7c545dfa3fb853a97fb3581ce10eb4f67a5861abed6e70e5e3312fdde402c";
+        final signature = hex.decode(
+            "ff70e0fd0653d4cc6c7e67b14c0872db3f74eec6f50d409a7e9129c577237751a1f924680e48cd87a27999c08f422a003867fae09f95f36012289f7bfb7f6f0b");
+        final message = hex.decode("ef91b6cef0e94a7ab2ffeb896b8266b01ab8003a578f4744d4ee64718771d8da");
+        final publicKey = ClPublicKey.fromHex(signer);
+        expect(
+            await verifySignatureEd25519(
+                publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
+            isTrue);
+      });
+    });
+
+    group("Secp256k1 signature verification", () {
+      test("A sample SECP256K1 signed message's signature verified correctly", () async {
+        final signer = "02037292af42f13f1f49507c44afe216b37013e79a062d7e62890f77b8adad60501e";
+        final signature = hex.decode(
+            "f03831c61d147204c4456f9b47c3561a8b83496b760a040c901506ec54c54ab357a009d5d4d0b65e40729f7bbbbf042ab8d579d090e7a7aaa98f4aaf2651392e");
+        final message = hex.decode("d204b74d902e044563764f62e86353923c9328201c82c28fe75bf9fc0c4bbfbc");
+        final publicKey = ClPublicKey.fromHex(signer);
+        expect(
+            await verifySignatureSecp256k1(
+                publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
+            isTrue);
+      });
     });
   });
 

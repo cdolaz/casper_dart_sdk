@@ -6,8 +6,8 @@ import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
-import 'package:casper_dart_sdk/src/types/public_key.dart';
-import 'package:casper_dart_sdk/src/types/signature.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_signature.dart';
 import 'package:convert/convert.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pointycastle/digests/blake2b.dart';
@@ -76,8 +76,8 @@ class Deploy implements ByteSerializable {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DeployHeader implements ByteSerializable {
-  @PublicKeyJsonConverter()
-  PublicKey account;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey account;
 
   @DateTimeJsonConverter()
   DateTime timestamp;
@@ -103,7 +103,7 @@ class DeployHeader implements ByteSerializable {
   @override
   Uint8List toBytes() {
     ByteDataWriter mem = ByteDataWriter();
-    mem.write(account.bytes);
+    mem.write(account.bytesWithKeyAlgorithmIdentifier);
     mem.writeUint64(timestamp.millisecondsSinceEpoch);
     mem.writeUint64(ttl.inMilliseconds);
     mem.writeUint64(gasPrice);
@@ -121,10 +121,10 @@ class DeployHeader implements ByteSerializable {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DeployApproval implements ByteSerializable {
   @SignatureJsonConverter()
-  Signature signature;
+  ClSignature signature;
 
-  @PublicKeyJsonConverter()
-  PublicKey signer;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey signer;
 
   factory DeployApproval.fromJson(Map<String, dynamic> json) => _$DeployApprovalFromJson(json);
 
@@ -135,8 +135,8 @@ class DeployApproval implements ByteSerializable {
   @override
   Uint8List toBytes() {
     ByteDataWriter mem = ByteDataWriter();
-    mem.write(signer.bytes);
-    mem.write(signature.bytes);
+    mem.write(signer.bytesWithKeyAlgorithmIdentifier);
+    mem.write(signature.bytesWithKeyAlgorithmIdentifier);
     return mem.toBytes();
   }
 }

@@ -4,8 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 
-import 'package:casper_dart_sdk/src/types/public_key.dart';
-import 'package:casper_dart_sdk/src/types/signature.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_signature.dart';
 import 'package:casper_dart_sdk/src/types/validator_weight.dart';
 
 part 'generated/block.g.dart';
@@ -110,8 +110,8 @@ class BlockHeader {
 class BlockBody {
   List<String> deployHashes;
 
-  @PublicKeyJsonConverter()
-  PublicKey proposer;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey proposer;
 
   List<String> transferHashes;
 
@@ -123,11 +123,11 @@ class BlockBody {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BlockProof {
-  @PublicKeyJsonConverter()
-  PublicKey publicKey;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey publicKey;
 
   @SignatureJsonConverter()
-  Signature signature;
+  ClSignature signature;
 
   factory BlockProof.fromJson(Map<String, dynamic> json) => _$BlockProofFromJson(json);
   Map<String, dynamic> toJson() => _$BlockProofToJson(this);
@@ -150,11 +150,11 @@ class EraEnd {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class EraReport {
-  @PublicKeyJsonListConverter()
-  List<PublicKey> equivocators;
+  @ClPublicKeyJsonListConverter()
+  List<ClPublicKey> equivocators;
 
-  @PublicKeyJsonListConverter()
-  List<PublicKey> inactiveValidators;
+  @ClPublicKeyJsonListConverter()
+  List<ClPublicKey> inactiveValidators;
 
   List<Reward> rewards;
 
@@ -168,8 +168,8 @@ class EraReport {
 class Reward {
   int amount;
 
-  @PublicKeyJsonConverter()
-  PublicKey validator;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey validator;
 
   factory Reward.fromJson(Map<String, dynamic> json) => _$RewardFromJson(json);
   Map<String, dynamic> toJson() => _$RewardToJson(this);
@@ -179,8 +179,8 @@ class Reward {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BlockInfoShort {
-  @PublicKeyJsonConverter()
-  PublicKey creator;
+  @ClPublicKeyJsonConverter()
+  ClPublicKey creator;
 
   int eraId;
 

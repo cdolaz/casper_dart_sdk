@@ -1,16 +1,16 @@
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:casper_dart_sdk/src/types/public_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 import 'package:casper_dart_sdk/src/types/vesting_schedule.dart';
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 
 class Delegator {
   Uref bondingPurse;
 
-  PublicKey? delegatee;
+  ClPublicKey? delegatee;
 
-  PublicKey publicKey;
+  ClPublicKey publicKey;
 
   BigInt stakedAmount;
 
@@ -28,15 +28,15 @@ class DelegatorJsonConverter extends JsonConverter<Delegator, Map<String, dynami
     if (json.containsKey("bonding_purse")) {
       bondingPurse = UrefJsonConverter().fromJson(json["bonding_purse"]);
     }
-    PublicKey? delegatee;
+    ClPublicKey? delegatee;
     if (json.containsKey("validator_public_key")) {
-      delegatee = PublicKeyJsonConverter().fromJson(json["validator_public_key"]);
+      delegatee = ClPublicKeyJsonConverter().fromJson(json["validator_public_key"]);
     }
-    late PublicKey publicKey;
+    late ClPublicKey publicKey;
     if (json.containsKey("public_key")) {
-      publicKey = PublicKeyJsonConverter().fromJson(json["public_key"]);
+      publicKey = ClPublicKeyJsonConverter().fromJson(json["public_key"]);
     } else if (json.containsKey("delegator_public_key")) {
-      publicKey = PublicKeyJsonConverter().fromJson(json["delegator_public_key"]);
+      publicKey = ClPublicKeyJsonConverter().fromJson(json["delegator_public_key"]);
     }
     late BigInt stakedAmount;
     if (json.containsKey("staked_amount")) {
@@ -53,11 +53,11 @@ class DelegatorJsonConverter extends JsonConverter<Delegator, Map<String, dynami
   Map<String, dynamic> toJson(Delegator object) {
     final Map<String, dynamic> json = {
       "bonding_purse": UrefJsonConverter().toJson(object.bondingPurse),
-      "delegator_public_key": PublicKeyJsonConverter().toJson(object.publicKey),
+      "delegator_public_key": ClPublicKeyJsonConverter().toJson(object.publicKey),
       "staked_amount": object.stakedAmount.toString(),
     };
     if (object.delegatee != null) {
-      json["validator_public_key"] = PublicKeyJsonConverter().toJson(object.delegatee!);
+      json["validator_public_key"] = ClPublicKeyJsonConverter().toJson(object.delegatee!);
     }
     if (object.vestingSchedule != null) {
       json["vesting_schedule"] = object.vestingSchedule!.toJson();
