@@ -89,7 +89,8 @@ Map<String, dynamic> _$EraEndToJson(EraEnd instance) => <String, dynamic>{
     };
 
 EraReport _$EraReportFromJson(Map<String, dynamic> json) => EraReport(
-      const ClPublicKeyJsonListConverter().fromJson(json['equivocators'] as List),
+      const ClPublicKeyJsonListConverter()
+          .fromJson(json['equivocators'] as List),
       const ClPublicKeyJsonListConverter()
           .fromJson(json['inactive_validators'] as List),
       (json['rewards'] as List<dynamic>)

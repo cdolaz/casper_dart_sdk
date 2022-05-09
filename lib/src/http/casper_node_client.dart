@@ -1,4 +1,3 @@
-import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/constants.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
@@ -6,12 +5,14 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 
 class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   CasperNodeRpcClient(url) : super(url, {'User-Agent': 'CasperDart/0.1'});
@@ -50,6 +51,10 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
 
   Future<QueryGlobalStateResult> queryGlobalState(QueryGlobalStateParams params) async {
     return QueryGlobalStateResult.fromJson(await call(RpcMethodName.queryGlobalState, params.toJson()));
+  }
+
+  Future<GetItemResult> getItem(GetItemParams params) async {
+    return GetItemResult.fromJson(await call(RpcMethodName.stateGetItem, params.toJson()));
   }
 
   Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams params) async {

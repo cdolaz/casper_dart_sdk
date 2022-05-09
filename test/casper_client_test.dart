@@ -125,6 +125,14 @@ void main() {
       expect(result.storedValue, isA<Transfer>());
     });
 
+    test("can get state item", () async {
+      final result = await node.getItem("transfer-9f5fe878c29fc3bf537c0509ec5abe1781a72bb6a3197a440e3e68247fba5909",
+        "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303");
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.storedValue, isA<Transfer>());
+    });
+
     test("can get era info by switch block", () async {
       final blockHash = "d2077716e5b8796723c5720237239720f54e6ada54e3357f2c4896f2a51a6d8f";
       final result = await node.getEraInfoBySwitchBlock(BlockId.fromHash(blockHash));

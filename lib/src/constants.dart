@@ -15,6 +15,7 @@ class RpcMethodName {
   // State
   static const String stateGetBalance = "state_get_balance";
   static const String queryGlobalState = "query_global_state";
+  static const String stateGetItem = "state_get_item";
   static const String stateGetAuctionInfo = "state_get_auction_info";
 
   // Account

@@ -1,18 +1,22 @@
 import 'dart:convert';
 
-import 'package:casper_dart_sdk/casper_sdk.dart';
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
+
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:casper_dart_sdk/src/types/block.dart';
+import 'package:casper_dart_sdk/src/types/deploy.dart';
 
 class CasperClient {
   final CasperNodeRpcClient _nodeClient;
@@ -72,6 +76,12 @@ class CasperClient {
   Future<QueryGlobalStateResult> queryGlobalState(String key, String hash, bool isBlockHash,
       [List<String> path = const []]) async {
     return _nodeClient.queryGlobalState(QueryGlobalStateParams.fromPair(key, hash, isBlockHash, path));
+  }
+
+  /// [Deprecated] Use [queryGlobalState] instead.
+  /// Queries a state item and returns the stored value from the network
+  Future<GetItemResult> getItem(String key, String stateRootHash, [List<String> path = const []]) async {
+    return _nodeClient.getItem(GetItemParams(key, stateRootHash, path));
   }
 
   /// Requests an [EraInfo] from the network given a switch block.

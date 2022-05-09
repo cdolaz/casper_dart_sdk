@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:casper_dart_sdk/src/jsonrpc/rpc_result.dart';
