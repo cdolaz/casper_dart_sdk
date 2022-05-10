@@ -68,4 +68,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   Future<PutDeployResult> putDeploy(PutDeployParams params) async {
     return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, params.toJson()));
   }
+
+  /// [Deprecated] Will be deleted in the near future
+  Future<PutDeployResult> putDeployJson(Map<String, dynamic> deployJson) async {
+    return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, deployJson));
+  }
 }

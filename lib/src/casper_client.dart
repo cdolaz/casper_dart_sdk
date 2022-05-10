@@ -103,4 +103,14 @@ class CasperClient {
     }
     return _nodeClient.putDeploy(PutDeployParams(deploy));
   }
+
+  /// [Deprecated]
+  /// Sends a [Deploy] to the network to be executed.
+  /// [PutDeployResult] contains the hash of the deploy.
+  Future<PutDeployResult> putDeployJson(Map<String, dynamic> deployJson) async {
+    if (deployJson['deploy']['approvals'].isEmpty) {
+      throw ArgumentError('Deploy must be signed before sending to the network');
+    }
+    return _nodeClient.putDeployJson(deployJson);
+  }
 }
