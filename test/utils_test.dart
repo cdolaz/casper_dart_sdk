@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:buffer/buffer.dart';
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/cryptography_utils.dart';

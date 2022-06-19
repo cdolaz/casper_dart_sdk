@@ -1,7 +1,7 @@
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:casper_dart_sdk/src/types/cl_type.dart';
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:casper_dart_sdk/src/types/named_key.dart';
 
 part 'generated/contract.g.dart';
@@ -93,7 +93,7 @@ class EntryPointAccessJsonConverter extends JsonConverter<EntryPointAccess, dyna
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Parameter {
   String name;
-  
+
   @ClTypeDescriptorJsonConverter()
   ClTypeDescriptor clType;
 
@@ -138,7 +138,7 @@ class ContractVersion {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Group {
   @JsonKey(name: 'group')
-  String label; 
+  String label;
 
   @UrefJsonListConverter()
   List<Uref> keys;

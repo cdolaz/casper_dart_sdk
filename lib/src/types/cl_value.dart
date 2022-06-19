@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:buffer/buffer.dart';
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:convert/convert.dart';
+
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
 import 'package:casper_dart_sdk/src/types/cl_type.dart';
-import 'package:convert/convert.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:casper_dart_sdk/src/types/global_state_key.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 
 part 'generated/cl_value.g.dart';
 
@@ -269,7 +271,8 @@ class ClValue implements ByteSerializable {
   }
 
   ClValue.tuple3(ClValue value1, ClValue value2, ClValue value3) {
-    clTypeDescriptor = ClTuple3TypeDescriptor(value1.clTypeDescriptor, value2.clTypeDescriptor, value3.clTypeDescriptor);
+    clTypeDescriptor =
+        ClTuple3TypeDescriptor(value1.clTypeDescriptor, value2.clTypeDescriptor, value3.clTypeDescriptor);
     ByteDataWriter mem = ByteDataWriter(endian: Endian.little);
     mem.write(value1.bytes);
     mem.write(value2.bytes);

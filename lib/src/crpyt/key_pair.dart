@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 import 'package:casper_dart_sdk/src/helpers/cryptography_utils.dart';
 import 'package:casper_dart_sdk/src/helpers/byte_utils.dart';
 import 'package:cryptography/cryptography.dart' as crypt;

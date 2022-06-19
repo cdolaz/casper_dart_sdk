@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:json_annotation/json_annotation.dart';
+import 'package:convert/convert.dart';
 import 'package:buffer/buffer.dart';
-import 'package:casper_dart_sdk/casper_sdk.dart';
+
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/json_utils.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
-import 'package:convert/convert.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 
 abstract class GlobalStateKey implements ByteSerializable {
   /// The key prefixed with key identifier string.

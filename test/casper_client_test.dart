@@ -1,9 +1,9 @@
-import 'dart:io' show File, Platform;
+import 'dart:io' show Platform;
 
 import 'package:test/test.dart';
 
 import 'package:rpc_exceptions/rpc_exceptions.dart';
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 
 void main() {
   group("Casper Dart SDK", () {
@@ -99,7 +99,8 @@ void main() {
     });
 
     test("can get block info by its hash", () async {
-      final result = await node.getBlock(BlockId.fromHash("63fba0849c1301c2ecad7772432060cdb4ab6cad3e3a5ebec2d3eeee5ea986fb"));
+      final result =
+          await node.getBlock(BlockId.fromHash("63fba0849c1301c2ecad7772432060cdb4ab6cad3e3a5ebec2d3eeee5ea986fb"));
       expect(result, isNotNull);
       expect(result.apiVersion, isNotEmpty);
       expect(result.block, isNotNull);
@@ -107,7 +108,8 @@ void main() {
     });
 
     test("can get block transfers by block hash", () async {
-      final result = await node.getBlockTransfers(BlockId.fromHash("a1f829cff2389cf6637ed89fb2fab48351b1278c131ee8445e1e28333c9a44d0"));
+      final result = await node
+          .getBlockTransfers(BlockId.fromHash("a1f829cff2389cf6637ed89fb2fab48351b1278c131ee8445e1e28333c9a44d0"));
       expect(result.transfers, isNotEmpty);
     });
 
@@ -118,8 +120,10 @@ void main() {
     });
 
     test("can query a global state", () async {
-      final result = await node.queryGlobalState("transfer-9f5fe878c29fc3bf537c0509ec5abe1781a72bb6a3197a440e3e68247fba5909",
-         "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303", false);
+      final result = await node.queryGlobalState(
+          "transfer-9f5fe878c29fc3bf537c0509ec5abe1781a72bb6a3197a440e3e68247fba5909",
+          "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303",
+          false);
       expect(result, isNotNull);
       expect(result.apiVersion, isNotEmpty);
       expect(result.storedValue, isA<Transfer>());
@@ -127,7 +131,7 @@ void main() {
 
     test("can get state item", () async {
       final result = await node.getItem("transfer-9f5fe878c29fc3bf537c0509ec5abe1781a72bb6a3197a440e3e68247fba5909",
-        "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303");
+          "39f2800688b94f68ca640b26c7d0f50a90d2ce9af55c9484e66151b544345303");
       expect(result, isNotNull);
       expect(result.apiVersion, isNotEmpty);
       expect(result.storedValue, isA<Transfer>());

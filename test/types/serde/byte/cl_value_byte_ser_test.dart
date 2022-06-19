@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 import 'package:convert/convert.dart';
 import 'package:test/test.dart';
 
