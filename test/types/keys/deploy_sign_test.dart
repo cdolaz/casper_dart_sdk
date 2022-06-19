@@ -14,7 +14,7 @@ void main() {
   group("Casper Dart SDK", () {
     group("Deploy Signing", () {
       test("can create a signed deploy with secp256k1", () async {
-        final owner = Secp256k1KeyPair.generate();
+        final owner = await Secp256k1KeyPair.generate();
         final deploy = Deploy.create(
             DeployHeader.withoutBodyHash(owner.publicKey, DateTime.fromMillisecondsSinceEpoch(1640979000000),
                 Duration(minutes: 30), 1, [], "casper-test"),
@@ -23,9 +23,9 @@ void main() {
         await deploy.sign(owner);
         int approvalCount = 24;
         for (int i = 0; i < approvalCount; i++) {
-          final approver = Secp256k1KeyPair.generate();
+          final approver = await Secp256k1KeyPair.generate();
           await deploy.sign(approver);
-          expect(deploy.verifySignatures(), isNull);
+          expect(await deploy.verifySignatures(), isNull);
         }
         expect(deploy.approvals, hasLength(approvalCount + 1));
       });

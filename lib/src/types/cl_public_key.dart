@@ -1,16 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:casper_dart_sdk/src/helpers/cryptography_utils.dart';
-import 'package:cryptography/cryptography.dart';
-import 'package:encrypt/encrypt_io.dart';
-import 'package:pem/pem.dart';
 import 'package:pointycastle/digests/blake2b.dart';
-import 'package:pointycastle/pointycastle.dart';
 import 'package:tuple/tuple.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:basic_utils/basic_utils.dart';
 
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/types/key_algorithm.dart';
@@ -39,28 +33,6 @@ class ClPublicKey {
     return ClPublicKey(bytes, algorithm);
   }
 
-  factory ClPublicKey.fromPemFile(final File pemFile) {
-    final String pemString = pemFile.readAsStringSync();
-    final ECPublicKey publicKey = CryptoUtils.ecPublicKeyFromPem(pemString);
-    late KeyAlgorithm algorithm;
-    if (publicKey.parameters!.domainName == 'secp256k1') {
-      algorithm = KeyAlgorithm.secp256k1;
-    } else {
-      algorithm = KeyAlgorithm.ed25519;
-    }
-    Uint8List bytes = publicKey.Q!.getEncoded(true);
-    return ClPublicKey(bytes, algorithm);
-  }
-
-  void writeAsPem(File outputPemFile) { 
-    // Get curve table
-    final ECDomainParameters domainParams = ECDomainParameters(keyAlgorithm == KeyAlgorithm.ed25519 ? "ed25519" : "secp256k1");
-    final ECPoint? point = domainParams.curve.decodePoint(bytes);
-    final ECPublicKey ecPublicKey = ECPublicKey(point, domainParams);
-    final pemString = CryptoUtils.encodeEcPublicKeyToPem(ecPublicKey);
-    outputPemFile.writeAsStringSync(pemString);
-  }
-
   /// Byte array of the public key, including the key algorithm identifier as the first byte.
   Uint8List get bytesWithKeyAlgorithmIdentifier {
     final Uint8List prefixedBytes = Uint8List(bytes.length + 1);
@@ -69,10 +41,10 @@ class ClPublicKey {
     return prefixedBytes;
   }
 
-  bool verify(Uint8List message, Uint8List signatureBytes) {
+  Future<bool> verify(Uint8List message, Uint8List signatureBytes) async {
     switch (keyAlgorithm) {
       case KeyAlgorithm.ed25519:
-        throw UnimplementedError('Ed25519 public key verification is not implemented');
+        return verifySignatureEd25519(bytes, message, signatureBytes);
       case KeyAlgorithm.secp256k1:
         return verifySignatureSecp256k1(bytes, message, signatureBytes);
     }

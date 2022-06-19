@@ -109,8 +109,7 @@ void main() {
         final message = hex.decode("ef91b6cef0e94a7ab2ffeb896b8266b01ab8003a578f4744d4ee64718771d8da");
         final publicKey = ClPublicKey.fromHex(signer);
         expect(
-            await verifySignatureEd25519(
-                publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
+            await verifySignatureEd25519(publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
             isTrue);
       });
     });
@@ -122,17 +121,19 @@ void main() {
       final message =
           Uint8List.fromList(hex.decode("d204b74d902e044563764f62e86353923c9328201c82c28fe75bf9fc0c4bbfbc"));
 
-      test("A sample SECP256K1 signed message's signature verified correctly", () {
+      test("A sample SECP256K1 signed message's signature verified correctly", () async {
         final publicKey = ClPublicKey.fromHex(signer);
-        expect(verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
+        expect(
+            await verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
             isTrue);
       });
 
-      test("A sample SECP256K1 signed message's modified signature is not verified", () {
+      test("A sample SECP256K1 signed message's modified signature is not verified", () async {
         final signatureModified = Uint8List.fromList(signature);
         signatureModified[0] = signatureModified[0] + 1;
         final publicKey = ClPublicKey.fromHex(signer);
-        expect(verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), signatureModified), isFalse);
+        expect(
+            await verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), signatureModified), isFalse);
       });
     });
   });

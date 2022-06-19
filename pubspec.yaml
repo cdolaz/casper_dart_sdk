@@ -1,6 +1,6 @@
 name: casper_dart_sdk
 description: Dart SDK for interacting with the Casper Blockchain
-version: 1.0.0
+version: 0.1.0
 homepage: https://casper.network/docs/
 
 environment:
@@ -22,11 +22,8 @@ dependencies:
   jsonrpc2: ^3.0.1
   tuple: ^2.0.0
   equatable: ^2.0.0
-  pem: ^2.0.0
   cryptography: ^2.0.5
-  encrypt: ^5.0.1
   basic_utils: ^4.2.2
   secp256k1: ^0.3.0
-  elliptic: ^0.3.8
   pointycastle: ^3.6.0
 

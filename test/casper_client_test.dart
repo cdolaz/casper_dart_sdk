@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 
 import 'package:test/test.dart';
 
@@ -149,7 +149,5 @@ void main() {
       expect(result.apiVersion, isNotEmpty);
       expect(result.auctionState!.blockHeight, 569706);
     });
-
-    // TODO: Test putDeploy.
   });
 }

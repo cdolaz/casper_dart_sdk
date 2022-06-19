@@ -42,9 +42,10 @@ class Deploy implements ByteSerializable {
     hash = Cep57Checksum.encode(headerHash);
   }
 
-  Future<void> sign(KeyPair pair) async {
+  Future<Uint8List> sign(KeyPair pair) async {
     Uint8List signatureBytes = await pair.sign(Uint8List.fromList(hex.decode(hash)));
     addApproval(DeployApproval(ClSignature.fromBytes(signatureBytes, pair.publicKey.keyAlgorithm), pair.publicKey));
+    return signatureBytes;
   }
 
   void addApproval(DeployApproval approval) {
@@ -54,9 +55,9 @@ class Deploy implements ByteSerializable {
   /// Verifies the approval signatures of the deploy
   /// Returns null if the signature is valid, otherwise
   /// returns the public key of the signer that failed to verify
-  ClPublicKey? verifySignatures() {
+  Future<ClPublicKey?> verifySignatures() async {
     for (DeployApproval approval in approvals) {
-      if (!approval.signer.verify(Uint8List.fromList(hex.decode(hash)), approval.signature.bytes)) {
+      if (!(await approval.signer.verify(Uint8List.fromList(hex.decode(hash)), approval.signature.bytes))) {
         return approval.signer;
       }
     }
