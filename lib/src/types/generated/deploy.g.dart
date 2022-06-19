@@ -20,12 +20,12 @@ Deploy _$DeployFromJson(Map<String, dynamic> json) => Deploy(
 
 Map<String, dynamic> _$DeployToJson(Deploy instance) => <String, dynamic>{
       'hash': const Cep57ChecksummedHexJsonConverter().toJson(instance.hash),
-      'header': instance.header,
+      'header': instance.header.toJson(),
       'payment':
           const ExecutableDeployItemJsonConverter().toJson(instance.payment),
       'session':
           const ExecutableDeployItemJsonConverter().toJson(instance.session),
-      'approvals': instance.approvals,
+      'approvals': instance.approvals.map((e) => e.toJson()).toList(),
     };
 
 DeployHeader _$DeployHeaderFromJson(Map<String, dynamic> json) => DeployHeader(
@@ -54,13 +54,13 @@ Map<String, dynamic> _$DeployHeaderToJson(DeployHeader instance) =>
 
 DeployApproval _$DeployApprovalFromJson(Map<String, dynamic> json) =>
     DeployApproval(
-      const SignatureJsonConverter().fromJson(json['signature'] as String),
+      const ClSignatureJsonConverter().fromJson(json['signature'] as String),
       const ClPublicKeyJsonConverter().fromJson(json['signer'] as String),
     );
 
 Map<String, dynamic> _$DeployApprovalToJson(DeployApproval instance) =>
     <String, dynamic>{
-      'signature': const SignatureJsonConverter().toJson(instance.signature),
+      'signature': const ClSignatureJsonConverter().toJson(instance.signature),
       'signer': const ClPublicKeyJsonConverter().toJson(instance.signer),
     };
 

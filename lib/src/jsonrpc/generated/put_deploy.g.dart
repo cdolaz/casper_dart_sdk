@@ -13,7 +13,7 @@ PutDeployParams _$PutDeployParamsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PutDeployParamsToJson(PutDeployParams instance) =>
     <String, dynamic>{
-      'deploy': instance.deploy,
+      'deploy': instance.deploy.toJson(),
     };
 
 PutDeployResult _$PutDeployResultFromJson(Map<String, dynamic> json) =>

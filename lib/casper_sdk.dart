@@ -37,3 +37,4 @@ export 'src/types/delegator.dart';
 export 'src/types/contract.dart';
 export 'src/types/validator_weight.dart';
 export 'src/types/auction_state.dart';
+export 'src/crpyt/key_pair.dart';

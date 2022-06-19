@@ -32,11 +32,11 @@ Map<String, dynamic> _$GetStatusResultToJson(GetStatusResult instance) =>
       'api_version': instance.apiVersion,
       'build_version': instance.buildVersion,
       'chainspec_name': instance.chainspecName,
-      'last_added_block_info': instance.lastAddedBlockInfo,
+      'last_added_block_info': instance.lastAddedBlockInfo?.toJson(),
       'next_upgrade': instance.nextUpgrade,
       'our_public_signing_key':
           const ClPublicKeyJsonConverter().toJson(instance.ourPublicSigningKey),
-      'peers': instance.peers,
+      'peers': instance.peers.map((e) => e.toJson()).toList(),
       'round_length': instance.roundLength,
       'starting_state_root_hash': instance.startingStateRootHash,
       'uptime':

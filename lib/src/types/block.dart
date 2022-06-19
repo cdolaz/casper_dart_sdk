@@ -126,7 +126,7 @@ class BlockProof {
   @ClPublicKeyJsonConverter()
   ClPublicKey publicKey;
 
-  @SignatureJsonConverter()
+  @ClSignatureJsonConverter()
   ClSignature signature;
 
   factory BlockProof.fromJson(Map<String, dynamic> json) => _$BlockProofFromJson(json);

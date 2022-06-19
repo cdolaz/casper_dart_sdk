@@ -264,7 +264,7 @@ class NamedArgsJsonConverter extends JsonConverter<List<NamedArg>, List<dynamic>
   @override
   List<dynamic> toJson(List<NamedArg> object) {
     // Serialize runtime args
-    final List<dynamic> args = List.empty();
+    final List<dynamic> args = [];
     for (int i = 0; i < object.length; i++) {
       final NamedArg arg = object[i];
       args.add([arg.name, arg.value.toJson()]);
@@ -302,6 +302,20 @@ class ExecutableDeployItemJsonConverter implements JsonConverter<ExecutableDeplo
 
   @override
   Map<String, dynamic> toJson(ExecutableDeployItem value) {
-    throw UnimplementedError();
+     if (value is ModuleBytesDeployItem) {
+      return value.toJson();
+    } else if (value is StoredContractByNameDeployItem) {
+      return value.toJson();
+    } else if (value is StoredContractByHashDeployItem) {
+      return value.toJson();
+    } else if (value is StoredVersionedContractByNameDeployItem) {
+      return value.toJson();
+    } else if (value is StoredVersionedContractByHashDeployItem) {
+      return value.toJson();
+    } else if (value is TransferDeployItem) {
+      return value.toJson();
+    } else {
+      throw Exception("Unknown deploy item type: ${value.runtimeType}");
+    }
   }
 }

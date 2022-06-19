@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -21,6 +22,17 @@ Iterable<int> bytesToBits(List<int> bytes) {
         (element >> 6) & 0x01,
         (element >> 7) & 0x01
       ]);
+}
+
+Uint8List randomBytes(int length, {bool secure = true}) {
+  Random random;
+  if (secure) {
+    random = Random.secure();
+  } else {
+    random = Random();
+  }
+  var bytes = List<int>.generate(32, (_) => random.nextInt(256));
+  return Uint8List.fromList(bytes);
 }
 
 Uint8List convertToLittleEndian(Uint8List bytes) {

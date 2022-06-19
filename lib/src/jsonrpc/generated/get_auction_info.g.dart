@@ -17,7 +17,7 @@ GetAuctionInfoParams _$GetAuctionInfoParamsFromJson(
 Map<String, dynamic> _$GetAuctionInfoParamsToJson(
         GetAuctionInfoParams instance) =>
     <String, dynamic>{
-      'block_identifier': instance.blockId,
+      'block_identifier': instance.blockId?.toJson(),
     };
 
 GetAuctionInfoResult _$GetAuctionInfoResultFromJson(
@@ -34,5 +34,5 @@ Map<String, dynamic> _$GetAuctionInfoResultToJson(
         GetAuctionInfoResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'auction_state': instance.auctionState,
+      'auction_state': instance.auctionState?.toJson(),
     };

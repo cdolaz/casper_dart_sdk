@@ -21,8 +21,8 @@ Contract _$ContractFromJson(Map<String, dynamic> json) => Contract(
 Map<String, dynamic> _$ContractToJson(Contract instance) => <String, dynamic>{
       'contract_package_hash': instance.contractPackageHash,
       'contract_wasm_hash': instance.contractWasmHash,
-      'entry_points': instance.entryPoints,
-      'named_keys': instance.namedKeys,
+      'entry_points': instance.entryPoints.map((e) => e.toJson()).toList(),
+      'named_keys': instance.namedKeys.map((e) => e.toJson()).toList(),
       'protocol_version': instance.protocolVersion,
     };
 
@@ -43,9 +43,10 @@ ContractPackage _$ContractPackageFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ContractPackageToJson(ContractPackage instance) =>
     <String, dynamic>{
       'access_key': const UrefJsonConverter().toJson(instance.accessKey),
-      'disabled_versions': instance.disabledVersions,
-      'groups': instance.groups,
-      'versions': instance.versions,
+      'disabled_versions':
+          instance.disabledVersions.map((e) => e.toJson()).toList(),
+      'groups': instance.groups.map((e) => e.toJson()).toList(),
+      'versions': instance.versions.map((e) => e.toJson()).toList(),
     };
 
 EntryPoint _$EntryPointFromJson(Map<String, dynamic> json) => EntryPoint(
@@ -61,7 +62,7 @@ EntryPoint _$EntryPointFromJson(Map<String, dynamic> json) => EntryPoint(
 Map<String, dynamic> _$EntryPointToJson(EntryPoint instance) =>
     <String, dynamic>{
       'access': const EntryPointAccessJsonConverter().toJson(instance.access),
-      'args': instance.args,
+      'args': instance.args.map((e) => e.toJson()).toList(),
       'entry_point_type': _$EntryPointTypeEnumMap[instance.entryPointType],
       'name': instance.name,
       'ret': const ClTypeDescriptorJsonConverter().toJson(instance.returnType),

@@ -17,5 +17,5 @@ GetPeersResult _$GetPeersResultFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GetPeersResultToJson(GetPeersResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'peers': instance.peers,
+      'peers': instance.peers.map((e) => e.toJson()).toList(),
     };

@@ -13,26 +13,26 @@ void main() {
       expect((clTypeDescriptor as ClOptionTypeDescriptor).optionType.type, ClType.u64);
     });
 
-    test("can deserialize complex ClType object from json", () {
-      final json = {
-        "cl_type": {
-          "Option": {
-            "Map": {
-              "key": "U64",
-              "value": {
-                "Tuple2": [
-                  "U512",
-                  {
-                    "Result": {"ok": "U64", "err": "U512"}
-                  }
-                ]
-              }
+    final complexClType = {
+      "cl_type": {
+        "Option": {
+          "Map": {
+            "key": "U64",
+            "value": {
+              "Tuple2": [
+                "U512",
+                {
+                  "Result": {"ok": "U64", "err": "U512"}
+                }
+              ]
             }
           }
         }
-      };
+      }
+    };
 
-      final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(json['cl_type']);
+    test("can deserialize complex ClType object from json", () {
+      final clTypeDescriptor = ClTypeDescriptorJsonConverter().fromJson(complexClType['cl_type']);
       expect(clTypeDescriptor.type, ClType.option);
       final option = clTypeDescriptor as ClOptionTypeDescriptor;
       expect(option.optionType.type, ClType.map);
@@ -45,6 +45,15 @@ void main() {
       final result = tuple2.secondType as ClResultTypeDescriptor;
       expect(result.okType.type, ClType.u64);
       expect(result.errType.type, ClType.u512);
+    });
+
+    test("can serialize complex ClType object to json", () {
+      final clTypeDescriptor = ClOptionTypeDescriptor(ClMapTypeDescriptor(
+          ClTypeDescriptor(ClType.u64),
+          ClTuple2TypeDescriptor(ClTypeDescriptor(ClType.u512),
+              ClResultTypeDescriptor(ClTypeDescriptor(ClType.u64), ClTypeDescriptor(ClType.u512)))));
+      final json = ClTypeDescriptorJsonConverter().toJson(clTypeDescriptor);
+      expect(json, complexClType['cl_type']);
     });
   });
 }

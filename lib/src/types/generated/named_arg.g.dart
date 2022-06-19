@@ -13,5 +13,5 @@ NamedArg _$NamedArgFromJson(Map<String, dynamic> json) => NamedArg(
 
 Map<String, dynamic> _$NamedArgToJson(NamedArg instance) => <String, dynamic>{
       'name': instance.name,
-      'value': instance.value,
+      'value': instance.value.toJson(),
     };

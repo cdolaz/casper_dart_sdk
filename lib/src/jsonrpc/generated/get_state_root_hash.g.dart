@@ -15,7 +15,7 @@ GetStateRootHashParams _$GetStateRootHashParamsFromJson(
 Map<String, dynamic> _$GetStateRootHashParamsToJson(
         GetStateRootHashParams instance) =>
     <String, dynamic>{
-      'block_identifier': instance.blockIdentifier,
+      'block_identifier': instance.blockIdentifier.toJson(),
     };
 
 GetStateRootHashResult _$GetStateRootHashResultFromJson(

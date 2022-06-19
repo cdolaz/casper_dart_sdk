@@ -17,9 +17,9 @@ Block _$BlockFromJson(Map<String, dynamic> json) => Block(
 
 Map<String, dynamic> _$BlockToJson(Block instance) => <String, dynamic>{
       'hash': instance.hash,
-      'header': instance.header,
-      'body': instance.body,
-      'proofs': instance.proofs,
+      'header': instance.header.toJson(),
+      'body': instance.body.toJson(),
+      'proofs': instance.proofs.map((e) => e.toJson()).toList(),
     };
 
 BlockHeader _$BlockHeaderFromJson(Map<String, dynamic> json) => BlockHeader()
@@ -41,7 +41,7 @@ Map<String, dynamic> _$BlockHeaderToJson(BlockHeader instance) =>
     <String, dynamic>{
       'accumulated_seed': instance.accumulatedSeed,
       'body_hash': instance.bodyHash,
-      'era_end': instance.eraEnd,
+      'era_end': instance.eraEnd?.toJson(),
       'era_id': instance.eraId,
       'height': instance.height,
       'parent_hash': instance.parentHash,
@@ -67,13 +67,13 @@ Map<String, dynamic> _$BlockBodyToJson(BlockBody instance) => <String, dynamic>{
 
 BlockProof _$BlockProofFromJson(Map<String, dynamic> json) => BlockProof(
       const ClPublicKeyJsonConverter().fromJson(json['public_key'] as String),
-      const SignatureJsonConverter().fromJson(json['signature'] as String),
+      const ClSignatureJsonConverter().fromJson(json['signature'] as String),
     );
 
 Map<String, dynamic> _$BlockProofToJson(BlockProof instance) =>
     <String, dynamic>{
       'public_key': const ClPublicKeyJsonConverter().toJson(instance.publicKey),
-      'signature': const SignatureJsonConverter().toJson(instance.signature),
+      'signature': const ClSignatureJsonConverter().toJson(instance.signature),
     };
 
 EraEnd _$EraEndFromJson(Map<String, dynamic> json) => EraEnd(
@@ -83,7 +83,7 @@ EraEnd _$EraEndFromJson(Map<String, dynamic> json) => EraEnd(
     );
 
 Map<String, dynamic> _$EraEndToJson(EraEnd instance) => <String, dynamic>{
-      'era_report': instance.eraReport,
+      'era_report': instance.eraReport.toJson(),
       'next_era_validator_weights': const ValidatorWeightJsonListConverter()
           .toJson(instance.nextEraValidatorWeights),
     };
@@ -103,7 +103,7 @@ Map<String, dynamic> _$EraReportToJson(EraReport instance) => <String, dynamic>{
           const ClPublicKeyJsonListConverter().toJson(instance.equivocators),
       'inactive_validators': const ClPublicKeyJsonListConverter()
           .toJson(instance.inactiveValidators),
-      'rewards': instance.rewards,
+      'rewards': instance.rewards.map((e) => e.toJson()).toList(),
     };
 
 Reward _$RewardFromJson(Map<String, dynamic> json) => Reward(

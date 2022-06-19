@@ -15,7 +15,7 @@ GetBlockTransfersParams _$GetBlockTransfersParamsFromJson(
 Map<String, dynamic> _$GetBlockTransfersParamsToJson(
         GetBlockTransfersParams instance) =>
     <String, dynamic>{
-      'block_identifier': instance.blockId,
+      'block_identifier': instance.blockId.toJson(),
     };
 
 GetBlockTransfersResult _$GetBlockTransfersResultFromJson(
@@ -33,5 +33,5 @@ Map<String, dynamic> _$GetBlockTransfersResultToJson(
     <String, dynamic>{
       'api_version': instance.apiVersion,
       'block_hash': instance.blockHash,
-      'transfers': instance.transfers,
+      'transfers': instance.transfers.map((e) => e.toJson()).toList(),
     };

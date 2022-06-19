@@ -13,7 +13,7 @@ GetBlockParams _$GetBlockParamsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GetBlockParamsToJson(GetBlockParams instance) =>
     <String, dynamic>{
-      'block_identifier': instance.blockId,
+      'block_identifier': instance.blockId.toJson(),
     };
 
 GetBlockResult _$GetBlockResultFromJson(Map<String, dynamic> json) =>
@@ -27,5 +27,5 @@ GetBlockResult _$GetBlockResultFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GetBlockResultToJson(GetBlockResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'block': instance.block,
+      'block': instance.block?.toJson(),
     };

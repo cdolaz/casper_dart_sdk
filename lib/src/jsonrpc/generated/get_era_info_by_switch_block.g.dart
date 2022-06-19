@@ -17,7 +17,7 @@ GetEraInfoBySwitchBlockParams _$GetEraInfoBySwitchBlockParamsFromJson(
 Map<String, dynamic> _$GetEraInfoBySwitchBlockParamsToJson(
         GetEraInfoBySwitchBlockParams instance) =>
     <String, dynamic>{
-      'block_identifier': instance.blockId,
+      'block_identifier': instance.blockId?.toJson(),
     };
 
 GetEraInfoBySwitchBlockResult _$GetEraInfoBySwitchBlockResultFromJson(
@@ -33,5 +33,5 @@ Map<String, dynamic> _$GetEraInfoBySwitchBlockResultToJson(
         GetEraInfoBySwitchBlockResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'era_summary': instance.eraSummary,
+      'era_summary': instance.eraSummary?.toJson(),
     };

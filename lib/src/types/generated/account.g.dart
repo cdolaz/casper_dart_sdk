@@ -23,10 +23,11 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
 Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
       'account_hash':
           const AccountHashKeyJsonConverter().toJson(instance.accountHash),
-      'action_thresholds': instance.actionThresholds,
-      'associated_keys': instance.associatedKeys,
+      'action_thresholds': instance.actionThresholds.toJson(),
+      'associated_keys':
+          instance.associatedKeys.map((e) => e.toJson()).toList(),
       'main_purse': const UrefJsonConverter().toJson(instance.mainPurse),
-      'named_keys': instance.namedKeys,
+      'named_keys': instance.namedKeys.map((e) => e.toJson()).toList(),
     };
 
 ActionThresholds _$ActionThresholdsFromJson(Map<String, dynamic> json) =>

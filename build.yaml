@@ -9,3 +9,4 @@ targets:
       json_serializable:
         options:
           generic_argument_factories: true
+          explicit_to_json: true

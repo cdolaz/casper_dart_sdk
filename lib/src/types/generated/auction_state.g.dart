@@ -19,8 +19,8 @@ AuctionState _$AuctionStateFromJson(Map<String, dynamic> json) => AuctionState(
 
 Map<String, dynamic> _$AuctionStateToJson(AuctionState instance) =>
     <String, dynamic>{
-      'bids': instance.bids,
+      'bids': instance.bids.map((e) => e.toJson()).toList(),
       'block_height': instance.blockHeight,
-      'era_validators': instance.eraValidators,
+      'era_validators': instance.eraValidators.map((e) => e.toJson()).toList(),
       'state_root_hash': instance.stateRootHash,
     };

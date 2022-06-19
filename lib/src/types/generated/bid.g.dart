@@ -29,7 +29,7 @@ Map<String, dynamic> _$BidToJson(Bid instance) => <String, dynamic>{
       'staked_amount': instance.stakedAmount.toString(),
       'validator_public_key': const ClPublicKeyNullableJsonConverter()
           .toJson(instance.validatorPublicKey),
-      'vesting_schedule': instance.vestingSchedule,
+      'vesting_schedule': instance.vestingSchedule?.toJson(),
     };
 
 ValidatorBid _$ValidatorBidFromJson(Map<String, dynamic> json) => ValidatorBid(
@@ -40,5 +40,5 @@ ValidatorBid _$ValidatorBidFromJson(Map<String, dynamic> json) => ValidatorBid(
 Map<String, dynamic> _$ValidatorBidToJson(ValidatorBid instance) =>
     <String, dynamic>{
       'public_key': const ClPublicKeyJsonConverter().toJson(instance.publicKey),
-      'bid': instance.bid,
+      'bid': instance.bid.toJson(),
     };

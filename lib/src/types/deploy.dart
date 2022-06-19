@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
+import 'package:casper_dart_sdk/src/crpyt/key_pair.dart';
 import 'package:casper_dart_sdk/src/helpers/checksummed_hex.dart';
 import 'package:casper_dart_sdk/src/helpers/string_utils.dart';
 import 'package:casper_dart_sdk/src/serde/byte_serializable.dart';
@@ -19,7 +20,7 @@ part 'generated/deploy.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Deploy implements ByteSerializable {
   @Cep57ChecksummedHexJsonConverter()
-  String hash;
+  late String hash;
 
   DeployHeader header;
 
@@ -29,12 +30,38 @@ class Deploy implements ByteSerializable {
   @ExecutableDeployItemJsonConverter()
   ExecutableDeployItem session;
 
-  List<DeployApproval> approvals;
+  List<DeployApproval> approvals = [];
 
   factory Deploy.fromJson(Map<String, dynamic> json) => _$DeployFromJson(json);
   Map<String, dynamic> toJson() => _$DeployToJson(this);
 
   Deploy(this.hash, this.header, this.payment, this.session, this.approvals);
+
+  Deploy.create(this.header, this.payment, this.session) {
+    header.bodyHash = Cep57Checksum.encode(bodyHash);
+    hash = Cep57Checksum.encode(headerHash);
+  }
+
+  Future<void> sign(KeyPair pair) async {
+    Uint8List signatureBytes = await pair.sign(Uint8List.fromList(hex.decode(hash)));
+    addApproval(DeployApproval(ClSignature.fromBytes(signatureBytes, pair.publicKey.keyAlgorithm), pair.publicKey));
+  }
+
+  void addApproval(DeployApproval approval) {
+    approvals.add(approval);
+  }
+
+  /// Verifies the approval signatures of the deploy
+  /// Returns null if the signature is valid, otherwise
+  /// returns the public key of the signer that failed to verify
+  ClPublicKey? verifySignatures() {
+    for (DeployApproval approval in approvals) {
+      if (!approval.signer.verify(Uint8List.fromList(hex.decode(hash)), approval.signature.bytes)) {
+        return approval.signer;
+      }
+    }
+    return null;
+  }
 
   Uint8List get bodyHash {
     ByteDataWriter mem = ByteDataWriter();
@@ -45,7 +72,7 @@ class Deploy implements ByteSerializable {
     blake2.update(body, 0, body.length);
     Uint8List hash = Uint8List(blake2.digestSize);
     blake2.doFinal(hash, 0);
-    return mem.toBytes();
+    return hash;
   }
 
   Uint8List get headerHash {
@@ -56,7 +83,7 @@ class Deploy implements ByteSerializable {
     blake2.update(body, 0, body.length);
     Uint8List hash = Uint8List(blake2.digestSize);
     blake2.doFinal(hash, 0);
-    return mem.toBytes();
+    return hash;
   }
 
   @override
@@ -88,17 +115,18 @@ class DeployHeader implements ByteSerializable {
   int gasPrice;
 
   @Cep57ChecksummedHexJsonConverter()
-  String bodyHash;
+  late String bodyHash;
 
   List<String> dependencies;
 
   String chainName;
 
   factory DeployHeader.fromJson(Map<String, dynamic> json) => _$DeployHeaderFromJson(json);
-
   Map<String, dynamic> toJson() => _$DeployHeaderToJson(this);
 
   DeployHeader(this.account, this.timestamp, this.ttl, this.gasPrice, this.bodyHash, this.dependencies, this.chainName);
+  DeployHeader.withoutBodyHash(
+      this.account, this.timestamp, this.ttl, this.gasPrice, this.dependencies, this.chainName);
 
   @override
   Uint8List toBytes() {
@@ -120,7 +148,7 @@ class DeployHeader implements ByteSerializable {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DeployApproval implements ByteSerializable {
-  @SignatureJsonConverter()
+  @ClSignatureJsonConverter()
   ClSignature signature;
 
   @ClPublicKeyJsonConverter()

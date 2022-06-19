@@ -38,7 +38,7 @@ Map<String, dynamic> _$QueryGlobalStateResultToJson(
         QueryGlobalStateResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'block_header': instance.blockHeader,
+      'block_header': instance.blockHeader?.toJson(),
       'stored_value':
           const StoredValueJsonConverter().toJson(instance.storedValue),
       'merkle_proof': instance.merkleProof,

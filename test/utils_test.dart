@@ -101,7 +101,6 @@ void main() {
   });
 
   group("Cryptography utils", () {
-
     group("Ed25519 signature verification", () {
       test("A sample Ed25519 signed message's signature verified correctly", () async {
         final signer = "01b7c7c545dfa3fb853a97fb3581ce10eb4f67a5861abed6e70e5e3312fdde402c";
@@ -117,16 +116,23 @@ void main() {
     });
 
     group("Secp256k1 signature verification", () {
-      test("A sample SECP256K1 signed message's signature verified correctly", () async {
-        final signer = "02037292af42f13f1f49507c44afe216b37013e79a062d7e62890f77b8adad60501e";
-        final signature = hex.decode(
-            "f03831c61d147204c4456f9b47c3561a8b83496b760a040c901506ec54c54ab357a009d5d4d0b65e40729f7bbbbf042ab8d579d090e7a7aaa98f4aaf2651392e");
-        final message = hex.decode("d204b74d902e044563764f62e86353923c9328201c82c28fe75bf9fc0c4bbfbc");
+      final signer = "02037292af42f13f1f49507c44afe216b37013e79a062d7e62890f77b8adad60501e";
+      final signature = Uint8List.fromList(hex.decode("f03831c61d147204c4456f9b47c3561a8b83496b760a040c901506"
+          "ec54c54ab357a009d5d4d0b65e40729f7bbbbf042ab8d579d090e7a7aaa98f4aaf2651392e"));
+      final message =
+          Uint8List.fromList(hex.decode("d204b74d902e044563764f62e86353923c9328201c82c28fe75bf9fc0c4bbfbc"));
+
+      test("A sample SECP256K1 signed message's signature verified correctly", () {
         final publicKey = ClPublicKey.fromHex(signer);
-        expect(
-            await verifySignatureSecp256k1(
-                publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
+        expect(verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), Uint8List.fromList(signature)),
             isTrue);
+      });
+
+      test("A sample SECP256K1 signed message's modified signature is not verified", () {
+        final signatureModified = Uint8List.fromList(signature);
+        signatureModified[0] = signatureModified[0] + 1;
+        final publicKey = ClPublicKey.fromHex(signer);
+        expect(verifySignatureSecp256k1(publicKey.bytes, Uint8List.fromList(message), signatureModified), isFalse);
       });
     });
   });
@@ -140,6 +146,7 @@ void main() {
         expect(checksumResult, equals(Cep57ChecksumResult.valid));
         expect(hash, equals(Cep57Checksum.encode(bytes)));
       }
+
       test("can encode checksummed string", () {
         testCep57Encoder("eA1D6C19ccAeb35Ae717065c250E0F7F6Dc64AC3c6494a797E0b33A23CA1f1b9");
         testCep57Encoder("98d945f5324F865243B7c02C0417AB6eaC361c5c56602FD42ced834a1Ba201B6");

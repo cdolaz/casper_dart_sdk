@@ -25,5 +25,5 @@ GetDeployResult _$GetDeployResultFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GetDeployResultToJson(GetDeployResult instance) =>
     <String, dynamic>{
       'api_version': instance.apiVersion,
-      'deploy': instance.deploy,
+      'deploy': instance.deploy.toJson(),
     };

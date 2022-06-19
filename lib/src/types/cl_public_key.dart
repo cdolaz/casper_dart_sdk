@@ -52,6 +52,15 @@ class ClPublicKey {
     return ClPublicKey(bytes, algorithm);
   }
 
+  void writeAsPem(File outputPemFile) { 
+    // Get curve table
+    final ECDomainParameters domainParams = ECDomainParameters(keyAlgorithm == KeyAlgorithm.ed25519 ? "ed25519" : "secp256k1");
+    final ECPoint? point = domainParams.curve.decodePoint(bytes);
+    final ECPublicKey ecPublicKey = ECPublicKey(point, domainParams);
+    final pemString = CryptoUtils.encodeEcPublicKeyToPem(ecPublicKey);
+    outputPemFile.writeAsStringSync(pemString);
+  }
+
   /// Byte array of the public key, including the key algorithm identifier as the first byte.
   Uint8List get bytesWithKeyAlgorithmIdentifier {
     final Uint8List prefixedBytes = Uint8List(bytes.length + 1);
@@ -60,12 +69,12 @@ class ClPublicKey {
     return prefixedBytes;
   }
 
-  Future<bool> verify(Uint8List message, Uint8List signature) async {
+  bool verify(Uint8List message, Uint8List signatureBytes) {
     switch (keyAlgorithm) {
       case KeyAlgorithm.ed25519:
-        return await verifySignatureEd25519(bytes, message, signature);
+        throw UnimplementedError('Ed25519 public key verification is not implemented');
       case KeyAlgorithm.secp256k1:
-        return await verifySignatureSecp256k1(bytes, message, signature);
+        return verifySignatureSecp256k1(bytes, message, signatureBytes);
     }
   }
 

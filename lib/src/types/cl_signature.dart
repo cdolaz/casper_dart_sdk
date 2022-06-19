@@ -66,8 +66,8 @@ class ClSignature {
   ClSignature(this.bytes, this.keyAlgorithm);
 }
 
-class SignatureJsonConverter extends JsonConverter<ClSignature, String> {
-  const SignatureJsonConverter();
+class ClSignatureJsonConverter extends JsonConverter<ClSignature, String> {
+  const ClSignatureJsonConverter();
 
   @override
   ClSignature fromJson(String json) {
