@@ -8,20 +8,17 @@ To use the SDK, you will need to have the following tools installed:
 
 ## Installation
 
-Since the SDK is under development, it is not available at [pub.dev](https://pub.dev) as of yet. But you can still use it by including the URL of the git repository in your application.
+Available at [pub.dev](https://pub.dev/packages/casper_dart_sdk).
 
 ```
 dependencies:
-  casper_dart_sdk:
-    git: 
-      url: https://github.com/cdolaz/casper_dart_sdk.git
-      ref: main
+  casper_dart_sdk: ^0.1.0
 ```
 
 ## Usage
 After importing via:
 ```dart
-import 'package:casper_dart_sdk/casper_sdk.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 ```
 
 Use the `CasperClient` class to interact with the Casper Blockchain.
