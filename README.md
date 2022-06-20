@@ -35,7 +35,11 @@ client.getPeers().then((result) {
 });
 ```
 
-## Building
+The [usage.md](./doc/usage.md) document contains more information about the usage of the SDK.
+
+## Development
+
+### Building
 
 Get dependencies:
 ```
@@ -47,7 +51,7 @@ To auto-generate serialization-deserialization classes, run build runner:
 dart run build_runner build
 ```
 
-## Testing
+### Testing
 
 Run all tests: 
 
@@ -60,3 +64,6 @@ Run specific test file:
 ```
 dart test test/utils_test.dart
 ```
+
+#### Test Environment
+The environment variable `CASPER_TEST_NODE_RPC_URL` must be set to run the tests. Bare in mind that currently, some of the tests might be specific to the test node `http://138.201.54.44:7777/rpc`. The server responses should be mocked instead of relying on a single test node.
