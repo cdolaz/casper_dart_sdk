@@ -4,6 +4,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_dictionary_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
@@ -12,7 +13,6 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_status.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
-import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 
 class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   CasperNodeRpcClient(url) : super(url, {'User-Agent': 'CasperDart/0.1'});
@@ -57,6 +57,10 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
     return GetItemResult.fromJson(await call(RpcMethodName.stateGetItem, params.toJson()));
   }
 
+  Future<GetDictionaryItemResult> getDictionaryItem(GetDictionaryItemParams params) async {
+    return GetDictionaryItemResult.fromJson(await call(RpcMethodName.stateGetDictionaryItem, params.toJson()));
+  }
+
   Future<GetEraInfoBySwitchBlockResult> getEraInfoBySwitchBlock(GetEraInfoBySwitchBlockParams params) async {
     return GetEraInfoBySwitchBlockResult.fromJson(await call(RpcMethodName.chainGetEraInfoBySwitchBlock, params.toJson()));
   }
@@ -69,7 +73,7 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
     return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, params.toJson()));
   }
 
-  /// [Deprecated] Will be deleted in the near future
+  /// [Deprecated]
   Future<PutDeployResult> putDeployJson(Map<String, dynamic> deployJson) async {
     return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, deployJson));
   }

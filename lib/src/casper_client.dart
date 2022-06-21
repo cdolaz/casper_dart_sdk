@@ -5,6 +5,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_deploy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_dictionary_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_era_info_by_switch_block.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_item.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_state_root_hash.dart';
@@ -80,8 +81,55 @@ class CasperClient {
 
   /// [Deprecated] Use [queryGlobalState] instead.
   /// Queries a state item and returns the stored value from the network
-  Future<GetItemResult> getItem(String key, String stateRootHash, [List<String> path = const []]) async {
+  Future<GetItemResult> getItem(String key, [String? stateRootHash, List<String> path = const []]) async {
+    stateRootHash ??= (await getStateRootHash()).stateRootHash;
     return _nodeClient.getItem(GetItemParams(key, stateRootHash, path));
+  }
+
+  /// Queries a dictionary item and returns the stored value from the network
+  /// [dictionaryItemKey] is the key of the dictionary item to query.
+  /// [stateRootHash] is the state root hash of the block.
+  Future<GetDictionaryItemResult> getDictionaryItem(String dictionaryItemKey, [String? stateRootHash]) async {
+    stateRootHash ??= (await getStateRootHash()).stateRootHash;
+    return _nodeClient
+        .getDictionaryItem(GetDictionaryItemParams.fromDictionaryItemKey(dictionaryItemKey, stateRootHash));
+  }
+
+  /// Queries a dictionary item from an account's named keys.
+  /// [accountKey] is the formatted key of the account, whose named keys contain the queried dictionary item.
+  /// [dictionaryName] is the named key under which the dictionary seed URef is stored.
+  /// [dictionaryItemKey] is the key of the dictionary item to query.
+  /// [stateRootHash] is the state root hash of the block.
+  Future<GetDictionaryItemResult> getDictionaryItemByAccount(
+      String accountKey, String dictionaryName, String dictionaryItemKey,
+      [String? stateRootHash]) async {
+    stateRootHash ??= (await getStateRootHash()).stateRootHash;
+    return _nodeClient.getDictionaryItem(
+        GetDictionaryItemParams.withAccountKey(accountKey, dictionaryName, dictionaryItemKey, stateRootHash));
+  }
+
+  /// Queries a dictionary item from a contract's named keys.
+  /// [contractKey] is the formatted key of the contract, whose named keys contain the queried dictionary item.
+  /// [dictionaryName] is the named key under which the dictionary seed URef is stored.
+  /// [dictionaryItemKey] is the key of the dictionary item to query.
+  /// [stateRootHash] is the state root hash of the block.
+  Future<GetDictionaryItemResult> getDictionaryItemByContract(
+      String contractKey, String dictionaryName, String dictionaryItemKey,
+      [String? stateRootHash]) async {
+    stateRootHash ??= (await getStateRootHash()).stateRootHash;
+    return _nodeClient.getDictionaryItem(
+        GetDictionaryItemParams.withContractKey(contractKey, dictionaryName, dictionaryItemKey, stateRootHash));
+  }
+
+  /// Queries a dictionary item via it's seed URef.
+  /// [seedUref] is the dictionary's seed URef.
+  /// [dictionaryItemKey] is the key of the dictionary item to query.
+  /// [stateRootHash] is the state root hash of the block.
+  Future<GetDictionaryItemResult> getDictionaryItemByUref(Uref seedUref, String dictionaryItemKey,
+      [String? stateRootHash]) async {
+    stateRootHash ??= (await getStateRootHash()).stateRootHash;
+    return _nodeClient
+        .getDictionaryItem(GetDictionaryItemParams.withSeedUref(seedUref, dictionaryItemKey, stateRootHash));
   }
 
   /// Requests an [EraInfo] from the network given a switch block.

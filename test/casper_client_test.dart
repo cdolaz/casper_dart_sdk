@@ -137,6 +137,19 @@ void main() {
       expect(result.storedValue, isA<Transfer>());
     });
 
+    test("can get dictionary item", () async {
+      final stateRootHash = "322b8d17faea2ee780b9b952a25a86520d36a78e20113f0658ae0b29a68a7384";
+      final dictionaryItemKey = "dictionary-"
+          "5d3e90f064798d54e5e53643c4fce0cbb1024aadcad1586cc4b7c1358a530373";
+      final result = await node.getDictionaryItem(dictionaryItemKey, stateRootHash);
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.dictionaryKey, equals(dictionaryItemKey));
+      final ClValue value = result.storedValue;
+      expect(value.clTypeDescriptor.type, ClType.string);
+      expect(value.parsed, equals("abc_value"));
+    });
+
     test("can get era info by switch block", () async {
       final blockHash = "d2077716e5b8796723c5720237239720f54e6ada54e3357f2c4896f2a51a6d8f";
       final result = await node.getEraInfoBySwitchBlock(BlockId.fromHash(blockHash));
