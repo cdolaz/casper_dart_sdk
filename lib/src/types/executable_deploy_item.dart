@@ -66,6 +66,8 @@ class ModuleBytesDeployItem extends ExecutableDeployItem {
     moduleBytes = Uint8List.fromList([]);
   }
 
+  ModuleBytesDeployItem.fromBytes(this.moduleBytes, [List<NamedArg>? args]) : super.withArgs(args ?? []);
+
   ModuleBytesDeployItem() : super();
 }
 
