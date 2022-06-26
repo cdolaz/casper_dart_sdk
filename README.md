@@ -12,7 +12,7 @@ Available at [pub.dev](https://pub.dev/packages/casper_dart_sdk).
 
 ```
 dependencies:
-  casper_dart_sdk: ^0.1.0
+  casper_dart_sdk: ^0.1.3
 ```
 
 ## Usage

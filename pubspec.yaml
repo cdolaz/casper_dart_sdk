@@ -1,7 +1,8 @@
 name: casper_dart_sdk
 description: Dart SDK for interacting with the Casper Blockchain
-version: 0.1.2
+version: 0.1.3
 homepage: https://casper.network/docs/
+repository: https://github.com/cdolaz/casper_dart_sdk
 
 environment:
   sdk: '>=2.15.1 <3.0.0'

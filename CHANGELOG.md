@@ -10,3 +10,8 @@
 
 - Add convenient constructors for `Deploy` objects.
 - Add `state_get_dictionary_item` RPC call.
+
+## 0.1.3
+
+- Add `state_get_account_info` RPC call.
+- Add more constructors for `Deploy` objects.
