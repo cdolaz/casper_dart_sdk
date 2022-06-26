@@ -166,5 +166,21 @@ void main() {
       expect(result.apiVersion, isNotEmpty);
       expect(result.auctionState!.blockHeight, 569706);
     });
+
+    test("can get account info", () async {
+      final accountHex = "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02";
+      final result = await node.getAccountInfo(ClPublicKey.fromHex(accountHex));
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.account, isNotNull);
+    });
+
+    test("can get account info with block id", () async {
+      final accountHex = "018afa98ca4be12d613617f7339a2d576950a2f9a92102ca4d6508ee31b54d2c02";
+      final result = await node.getAccountInfo(ClPublicKey.fromHex(accountHex), BlockId.fromHeight(100));
+      expect(result, isNotNull);
+      expect(result.apiVersion, isNotEmpty);
+      expect(result.account, isNotNull);
+    });
   });
 }

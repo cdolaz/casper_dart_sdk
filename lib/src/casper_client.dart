@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:casper_dart_sdk/src/http/casper_node_client.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_account_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
@@ -15,6 +16,7 @@ import 'package:casper_dart_sdk/src/jsonrpc/put_deploy.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/query_global_state.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_peers.dart';
 
+import 'package:casper_dart_sdk/src/types/cl_public_key.dart';
 import 'package:casper_dart_sdk/src/types/global_state_key.dart';
 import 'package:casper_dart_sdk/src/types/block.dart';
 import 'package:casper_dart_sdk/src/types/deploy.dart';
@@ -71,6 +73,12 @@ class CasperClient {
   Future<GetBalanceResult> getBalance(Uref purseUref, [String? stateRootHash]) async {
     stateRootHash ??= await getStateRootHash().then((result) => result.stateRootHash);
     return _nodeClient.getBalance(GetBalanceParams(purseUref, stateRootHash!));
+  }
+
+  /// Requests the information about the account with given [publicKey] from the network.
+  /// If no [blockId] is specified, the latest information will be requested.
+  Future<GetAccountInfoResult> getAccountInfo(ClPublicKey publicKey, [BlockId? blockId]) async {
+    return _nodeClient.getAccountInfo(GetAccountInfoParams(publicKey, blockId));
   }
 
   /// Queries a global state and returns the stored value from the network

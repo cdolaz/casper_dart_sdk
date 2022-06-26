@@ -1,5 +1,6 @@
 import 'package:casper_dart_sdk/src/constants.dart';
 import 'package:casper_dart_sdk/src/http/http_server_proxy.dart';
+import 'package:casper_dart_sdk/src/jsonrpc/get_account_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_auction_info.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_balance.dart';
 import 'package:casper_dart_sdk/src/jsonrpc/get_block_transfers.dart';
@@ -76,5 +77,9 @@ class CasperNodeRpcClient extends JsonRpcHttpServerProxy {
   /// [Deprecated]
   Future<PutDeployResult> putDeployJson(Map<String, dynamic> deployJson) async {
     return PutDeployResult.fromJson(await call(RpcMethodName.accountPutDeploy, deployJson));
+  }
+
+  Future<GetAccountInfoResult> getAccountInfo(GetAccountInfoParams params) async {
+    return GetAccountInfoResult.fromJson(await call(RpcMethodName.stateGetAccountInfo, params.toJson()));
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
+import 'package:casper_dart_sdk/casper_dart_sdk.dart';
 import 'package:convert/convert.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pointycastle/digests/blake2b.dart';
@@ -51,8 +52,9 @@ class Deploy implements ByteSerializable {
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the transfer.
   /// [chainName] is the name of the network that will execute the transfer.
   /// [idTransfer] is the id of the transfer. Can be null if not needed.
-  /// [ttl] is the validity period of the deploy since creation.
-  Deploy.createStandardTransfer(ClPublicKey from, ClPublicKey to, BigInt amount, BigInt paymentAmount, String chainName,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.standardTransfer(ClPublicKey from, ClPublicKey to, BigInt amount, BigInt paymentAmount, String chainName,
       [int? idTransfer, int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
       from,
@@ -73,8 +75,9 @@ class Deploy implements ByteSerializable {
   /// [instigator] is the public key of the account that deploys the contract.
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the deploy.
   /// [chainName] is the name of the network that will execute the deploy.
-  /// [ttl] is the validity period of the deploy since creation.
-  Deploy.createContract(Uint8List wasmBytes, ClPublicKey instigator, BigInt paymentAmount, String chainName,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.contract(Uint8List wasmBytes, ClPublicKey instigator, BigInt paymentAmount, String chainName,
       [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
       instigator,
@@ -98,8 +101,9 @@ class Deploy implements ByteSerializable {
   /// [caller] is the public key of the account that calls the contract.
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the call.
   /// [chainName] is the name of the network that will execute the call.
-  /// [ttl] is the validity period of the Deploy since creation.
-  Deploy.createContractCall(String contractName, String contractEntryPoint, List<NamedArg> args, ClPublicKey caller,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.contractCall(String contractName, String contractEntryPoint, List<NamedArg> args, ClPublicKey caller,
       BigInt paymentAmount, String chainName,
       [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
@@ -124,9 +128,10 @@ class Deploy implements ByteSerializable {
   /// [caller] is the public key of the account that calls the contract.
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the call.
   /// [chainName] is the name of the network that will execute the call.
-  /// [ttl] is the validity period of the Deploy since creation.
-  Deploy.createContractCallByHashKey(HashKey contractHash, String contractEntryPoint, List<NamedArg> args,
-      ClPublicKey caller, BigInt paymentAmount, String chainName,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.contractCallByContractHash(HashKey contractHash, String contractEntryPoint, List<NamedArg> args, ClPublicKey caller,
+      BigInt paymentAmount, String chainName,
       [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
       caller,
@@ -143,7 +148,7 @@ class Deploy implements ByteSerializable {
     hash = Cep57Checksum.encode(headerHash);
   }
 
-  /// Creates a [Deploy] object to call an entry point in a versioned contract. 
+  /// Creates a [Deploy] object to call an entry point in a versioned contract.
   /// The contract is referred by a named key in the caller's account.
   /// [contractName] is the named key in the caller account that contains a reference to the contract package key.
   /// [version] is the version of the contract to be called.
@@ -152,8 +157,9 @@ class Deploy implements ByteSerializable {
   /// [caller] is the public key of the account that calls the contract.
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the call.
   /// [chainName] is the name of the network that will execute the call.
-  /// [ttl] is the validity period of the Deploy since creation.
-  Deploy.createVersionedContractCall(String contractName, int? version, String contractEntryPoint, List<NamedArg> args,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.versionedContractCall(String contractName, int? version, String contractEntryPoint, List<NamedArg> args,
       ClPublicKey caller, BigInt paymentAmount, String chainName,
       [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
@@ -180,8 +186,9 @@ class Deploy implements ByteSerializable {
   /// [caller] is the public key of the account that calls the contract.
   /// [paymentAmount] is the amount of CSPR (in motes) to pay for the call.
   /// [chainName] is the name of the network that will execute the call.
-  /// [ttl] is the validity period of the Deploy since creation.
-  Deploy.createVersionedContractCallByHashKey(HashKey contractHash, int? version, String contractEntryPoint,
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.versionedContractCallByContractHash(HashKey contractHash, int? version, String contractEntryPoint,
       List<NamedArg> args, ClPublicKey caller, BigInt paymentAmount, String chainName,
       [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
     header = DeployHeader.withoutBodyHash(
@@ -197,6 +204,98 @@ class Deploy implements ByteSerializable {
     session = StoredVersionedContractByHashDeployItem(contractHash.key, version, contractEntryPoint, args);
     header.bodyHash = Cep57Checksum.encode(bodyHash);
     hash = Cep57Checksum.encode(headerHash);
+  }
+  
+  /// Creates a [Deploy] object to delegate tokens to a validator for staking.
+  /// [delegateContractWasm] is the array of bytes containing the delegation contract (compiled in Wasm).
+  /// [from] is the public key of the account that delegates the tokens.
+  /// [validator] is the public key of the validator to which the tokens are delegated for staking.
+  /// [amount] is the amount of CSPR (in motes) to delegate.
+  /// [paymentAmount] is the amount of CSPR (in motes) to pay for the delegation deployment.
+  /// [chainName] is the name of the network that will execute the call.
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.delegateTokens(Uint8List delegateContractWasm, ClPublicKey from, ClPublicKey validator, BigInt amount,
+      BigInt paymentAmount, String chainName,
+      [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
+    header = DeployHeader.withoutBodyHash(from, DateTime.now(), ttl, gasPrice, [], chainName);
+    payment = ModuleBytesDeployItem.fromAmount(paymentAmount);
+    session = ModuleBytesDeployItem.fromBytes(delegateContractWasm);
+    session.args.add(NamedArg("validator", ClValue.publicKey(validator)));
+    session.args.add(NamedArg("amount", ClValue.u512(amount)));
+    session.args.add(NamedArg("delegator", ClValue.publicKey(from)));
+    header.bodyHash = Cep57Checksum.encode(bodyHash);
+    hash = Cep57Checksum.encode(headerHash);
+  }
+
+  /// Creates a [Deploy] object to undelegate tokens from a validator.
+  /// [undelegateContractWasm] is the array of bytes containing the "undelegation" contract (compiled in Wasm).
+  /// [from] is the public key of the account that undelegates the tokens.
+  /// [validator] is the public key of the validator from which the tokens are undelegated.
+  /// [amount] is the amount of CSPR (in motes) to undelegate.
+  /// [paymentAmount] is the amount of CSPR (in motes) to pay for the delegation deployment.
+  /// [chainName] is the name of the network that will execute the call.
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.undelegateTokens(Uint8List undelegateContractWasm, ClPublicKey from, ClPublicKey validator, BigInt amount,
+      BigInt paymentAmount, String chainName,
+      [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
+    header = DeployHeader.withoutBodyHash(from, DateTime.now(), ttl, gasPrice, [], chainName);
+    payment = ModuleBytesDeployItem.fromAmount(paymentAmount);
+    session = ModuleBytesDeployItem.fromBytes(undelegateContractWasm);
+    session.args.add(NamedArg("validator", ClValue.publicKey(validator)));
+    session.args.add(NamedArg("amount", ClValue.u512(amount)));
+    session.args.add(NamedArg("delegator", ClValue.publicKey(from)));
+    header.bodyHash = Cep57Checksum.encode(bodyHash);
+    hash = Cep57Checksum.encode(headerHash);
+  }
+
+  Deploy.callAuctionContract(HashKey contractHash, String entryPoint, ClPublicKey from, ClPublicKey validator,
+      BigInt amount, BigInt paymentAmount, String chainName,
+      [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
+    header = DeployHeader.withoutBodyHash(from, DateTime.now(), ttl, gasPrice, [], chainName);
+    payment = ModuleBytesDeployItem.fromAmount(paymentAmount);
+    session = StoredContractByHashDeployItem(contractHash.toHex(), entryPoint, [
+      NamedArg("validator", ClValue.publicKey(validator)),
+      NamedArg("amount", ClValue.u512(amount)),
+      NamedArg("delegator", ClValue.publicKey(from))
+    ]);
+    header.bodyHash = Cep57Checksum.encode(bodyHash);
+    hash = Cep57Checksum.encode(headerHash);
+  }
+
+  /// Creates a [Deploy] object to call the auction contract to delegate tokens to a validator for staking.
+  /// Make sure you use the correct contract hash for the network you're sending.
+  /// [contractHash] is the hash of the delegation contract in the network.
+  /// [from] is the public key of the account that delegates the tokens.
+  /// [validator] is the public key of the validator to which the tokens are delegated for staking.
+  /// [amount] is the amount of CSPR (in motes) to delegate.
+  /// [paymentAmount] is the amount of CSPR (in motes) to pay for the delegation deployment.
+  /// [chainName] is the name of the network that will execute the call.
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.delegateTokensByContractHash(HashKey contractHash, ClPublicKey from, ClPublicKey validator, BigInt amount,
+      BigInt paymentAmount, String chainName,
+      [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
+    Deploy.callAuctionContract(
+        contractHash, "delegate", from, validator, amount, paymentAmount, chainName, gasPrice, ttl);
+  }
+
+  /// Creates a [Deploy] object to call the auction contract to delegate tokens to a validator for staking.
+  /// Make sure you use the correct contract hash for the network you're sending.
+  /// [contractHash] is the hash of the delegation contract in the network.
+  /// [from] is the public key of the account that delegates the tokens.
+  /// [validator] is the public key of the validator to which the tokens are delegated for staking.
+  /// [amount] is the amount of CSPR (in motes) to delegate.
+  /// [paymentAmount] is the amount of CSPR (in motes) to pay for the delegation deployment.
+  /// [chainName] is the name of the network that will execute the call.
+  /// [gasPrice] is the gas price. Default value is 1.
+  /// [ttl] is the validity period of the Deploy since creation. Default value is 30 minutes.
+  Deploy.undelegateTokensByContractHash(HashKey contractHash, ClPublicKey from, ClPublicKey validator, BigInt amount,
+      BigInt paymentAmount, String chainName,
+      [int gasPrice = 1, Duration ttl = const Duration(minutes: 30)]) {
+    Deploy.callAuctionContract(
+        contractHash, "undelegate", from, validator, amount, paymentAmount, chainName, gasPrice, ttl);
   }
 
   Future<Uint8List> sign(KeyPair pair) async {
